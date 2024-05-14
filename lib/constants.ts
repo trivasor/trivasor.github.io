@@ -10,7 +10,7 @@ export const LANG_LOCALE: { [key: string]: string } = {
 };
 export const SITE_NAME = "trivasor";
 export const SITE_URL = "https://trivasor.github.io/";
-export const AUTHOR = "TrivasorTATION";
+export const AUTHOR = "Trivasor";
 export const SITE_DESCRIPTION: { [key: string]: string } = {
   ko: "HTML, CSS, JS로 웹사이트, 게임, 앱을 만들고 있습니다.",
   en: "I develop websites, games and apps with HTML, CSS and JS.",
