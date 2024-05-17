@@ -20,7 +20,7 @@ cd out
 git clone -b gh-pages https://github.com/trivasor/trivasor.github.io/
 cp -rf trivasor.github.io/.git ./.git
 git config user.name "trivasor"
-git config user.email "13akstjq.blog24@gmail.com"
+git config user.email "13akstjq.blog23@gmail.com"
 rm -rf trivasor.github.io
 
 touch .nojekyll
