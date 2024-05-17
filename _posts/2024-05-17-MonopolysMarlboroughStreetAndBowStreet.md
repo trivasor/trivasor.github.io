@@ -48,7 +48,7 @@ Marlborough Street은 보드 게임에서 Vine Street를 따라가고 두 곳 �
 
 <div class="content-ad"></div>
 
-```markdown
+
 ![2024-05-17-MonopolysMarlboroughStreetAndBowStreet_8](/assets/img/2024-05-17-MonopolysMarlboroughStreetAndBowStreet_8.png)
 
 이 출입구 위에 있는 조각품을 전에는 주목하지 못했는데 — 이것이 어떤 이야기를 전하고 있는지 궁금하네요. 혹시 예술과 섬유물을 창조한 이야기일까요?
@@ -56,11 +56,11 @@ Marlborough Street은 보드 게임에서 Vine Street를 따라가고 두 곳 �
 ![2024-05-17-MonopolysMarlboroughStreetAndBowStreet_9](/assets/img/2024-05-17-MonopolysMarlboroughStreetAndBowStreet_9.png)
 
 난 런던 팔라듐 옆을 지나가는데, 거기에 있을 줄 몰랐던 곳이네요. 부모님과 아이들이 기다리면서 설렌 듯이 밖에 서 있는 모습이 보였어요.
-```
+
 
 <div class="content-ad"></div>
 
-```markdown
+
 ![Image 1](/assets/img/2024-05-17-MonopolysMarlboroughStreetAndBowStreet_10.png)
 
 ![Image 2](/assets/img/2024-05-17-MonopolysMarlboroughStreetAndBowStreet_11.png)
@@ -68,7 +68,7 @@ Marlborough Street은 보드 게임에서 Vine Street를 따라가고 두 곳 �
 ![Image 3](/assets/img/2024-05-17-MonopolysMarlboroughStreetAndBowStreet_12.png)
 
 ![Image 4](/assets/img/2024-05-17-MonopolysMarlboroughStreetAndBowStreet_13.png)
-```
+
 
 <div class="content-ad"></div>
 
@@ -122,7 +122,7 @@ Marlborough Street은 보드 게임에서 Vine Street를 따라가고 두 곳 �
 
 <div class="content-ad"></div>
 
-```markdown
+
 ![image 1](/assets/img/2024-05-17-MonopolysMarlboroughStreetAndBowStreet_26.png)
 
 ![image 2](/assets/img/2024-05-17-MonopolysMarlboroughStreetAndBowStreet_27.png)
@@ -130,7 +130,7 @@ Marlborough Street은 보드 게임에서 Vine Street를 따라가고 두 곳 �
 And the Royal Ballet School.
 
 ![image 3](/assets/img/2024-05-17-MonopolysMarlboroughStreetAndBowStreet_28.png)
-```
+
 
 <div class="content-ad"></div>
 
@@ -184,7 +184,7 @@ The front of the Royal Opera House.
 
 <div class="content-ad"></div>
 
-```markdown
+
 ![MonopolysMarlboroughStreetAndBowStreet_40](/assets/img/2024-05-17-MonopolysMarlboroughStreetAndBowStreet_40.png)
 
 ![MonopolysMarlboroughStreetAndBowStreet_41](/assets/img/2024-05-17-MonopolysMarlboroughStreetAndBowStreet_41.png)
@@ -192,11 +192,11 @@ The front of the Royal Opera House.
 ![MonopolysMarlboroughStreetAndBowStreet_42](/assets/img/2024-05-17-MonopolysMarlboroughStreetAndBowStreet_42.png)
 
 ![MonopolysMarlboroughStreetAndBowStreet_43](/assets/img/2024-05-17-MonopolysMarlboroughStreetAndBowStreet_43.png)
-```
+
 
 <div class="content-ad"></div>
 
-```markdown
+
 ![MonopolysMarlboroughStreetAndBowStreet 44](/assets/img/2024-05-17-MonopolysMarlboroughStreetAndBowStreet_44.png)
 
 ![MonopolysMarlboroughStreetAndBowStreet 45](/assets/img/2024-05-17-MonopolysMarlboroughStreetAndBowStreet_45.png)
@@ -204,7 +204,7 @@ The front of the Royal Opera House.
 ![MonopolysMarlboroughStreetAndBowStreet 46](/assets/img/2024-05-17-MonopolysMarlboroughStreetAndBowStreet_46.png)
 
 ![MonopolysMarlboroughStreetAndBowStreet 47](/assets/img/2024-05-17-MonopolysMarlboroughStreetAndBowStreet_47.png)
-```
+
 
 <div class="content-ad"></div>
 
