@@ -11,7 +11,7 @@ link: "https://medium.com/the-memoirist/how-i-became-pure-road-trash-09e3c663858
 ---
 
 
-```markdown
+
 ![HowIBecamePureRoadTrash](/assets/img/2024-05-21-HowIBecamePureRoadTrash_0.png)
 
 북아메리카의 주택으로 사라지는 것은 얼마나 쉬운 일인지 놀랄 것입니다. 하지만 사라지는 것은 언제나 어려운 일이 아니었습니다. 누구나 비행기에서 뛰어내릴 수 있습니다. 살아서 땅에 착지하는 것이 일이 많이 드는 일입니다.
@@ -19,7 +19,7 @@ link: "https://medium.com/the-memoirist/how-i-became-pure-road-trash-09e3c663858
 저는 이제 거의 2년 동안 계속된 길에서 살았습니다. 나와 개, 그리고 무서운 양의 이상한 카메라와 수많은 암실 화학물질뿐입니다. 매 출입국 때마다 아직도 땀을 흘리게 만드는 콜렉션.
 
 모든 것이 항상 그랬던 것은 아니었습니다. 한때 나는 진짜 사람이었습니다. 꽤 교육 받았었습니다. 3개의 공식 학위를 가지고 있습니다. 제 삶은 비교적 편안했습니다. 일부 로맨틱한 유형들은 그것을 "이디릭"이라고까지 부를 수 있습니다.
-```
+
 
 <div class="content-ad"></div>
 

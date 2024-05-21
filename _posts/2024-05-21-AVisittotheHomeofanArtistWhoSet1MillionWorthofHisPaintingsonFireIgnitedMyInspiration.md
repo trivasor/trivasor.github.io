@@ -21,7 +21,7 @@ link: "https://medium.com/@nicolepdotme/a-visit-to-the-home-of-an-artist-who-set
 
 <div class="content-ad"></div>
 
-```markdown
+
 ![A Visit to the Home of an Artist Who Set 1 Million Worth of His Paintings on Fire Ignited My Inspiration](/assets/img/2024-05-21-AVisittotheHomeofanArtistWhoSet1MillionWorthofHisPaintingsonFireIgnitedMyInspiration_0.png)
 
 # 테드 데그라지아(Ted DeGrazia)란 누구인가요?
@@ -29,7 +29,7 @@ link: "https://medium.com/@nicolepdotme/a-visit-to-the-home-of-an-artist-who-set
 이탈리아 부모를 가진 테드 데그라지아는 1909년 아리조나 주 영토인 모렌시에서 태어났습니다. 어린 시절을 통해 다양한 문화와 많은 어려움을 경험했는데, 가혹한 광산 마을에서 자란 데그라지아는 열심히 일하는 노동에 대한 감사함을 키우며 남서부 지역의 멕시코와 원주민 문화에 매료되었습니다.
 
 모렌시의 펠프스 도지 광산은 파업과 폐쇄에 직면하여 노동자들이 다시 개장할 때까지 생계수단을 찾아야 했습니다. 1920년 장기간에 걸친 폐쇄 중에, 테드의 가족은 이탈리아로 돌아갔습니다.
-```
+
 
 <div class="content-ad"></div>
 
@@ -43,7 +43,7 @@ link: "https://medium.com/@nicolepdotme/a-visit-to-the-home-of-an-artist-who-set
 
 <div class="content-ad"></div>
 
-```markdown
+
 ![Image](/assets/img/2024-05-21-AVisittotheHomeofanArtistWhoSet1MillionWorthofHisPaintingsonFireIgnitedMyInspiration_1.png)
 
 테드는 1936년 알렉산드라 디아모스와 결혼하였고, 그들은 세 아이를 낳았습니다. 년 년 동안, 데그라지아는 애리조나 주 비스비의 영화관 매니저부터 투선의 비행기 기술자까지 다양한 직업을 가졌습니다. 테드와 그의 첫 번째 아내는 1946년 이혼했습니다.
@@ -51,7 +51,7 @@ link: "https://medium.com/@nicolepdotme/a-visit-to-the-home-of-an-artist-who-set
 데그라지아는 다재다능한 인물이었습니다. 화가일 뿐만 아니라 음악가, 조각가, 건축가 등 다양한 분야에서 활약했죠. 테드는 애리조나, 캘리포니아, 멕시코를 넘나들며 예술 작품에 영감을 얻으려 했던 것으로 보입니다. 그는 늘 남서부와의 연결을 표현하는 방법을 찾고 있었던 것 같네요.
 
 매우 다작이었던 테드 데그라지아. 예술가 데그라지아를 알기 쉬운 인물이었습니다. 그의 두 번째 아내인 메리언은 한 때 그가 1,600점의 오일화, 3,500점의 수채화, 2,500점의 초상화, 500점의 도자기, 250점의 암벨 및 보석 등을 만들었다고 썼습니다.
-```
+
 
 <div class="content-ad"></div>
 
@@ -162,7 +162,6 @@ James W. Johnson과 Marilyn D. Johnson, 『데 그라지아: 인과 신화』, �
 
 <div class="content-ad"></div>
 
-```md
 [2:] James W. Johnson 및 Marilyn D. Johnson, De Grazia: The Man and the Myths, 2nd ed. (University of Arizona Press, 2015), loc. 575.
 
 [3]: James W. Johnson 및 Marilyn D. Johnson, De Grazia: The Man and the Myths, 2nd ed. (University of Arizona Press, 2015), loc. 1409.
@@ -170,7 +169,6 @@ James W. Johnson과 Marilyn D. Johnson, 『데 그라지아: 인과 신화』, �
 [4]: James W. Johnson 및 Marilyn D. Johnson, De Grazia: The Man and the Myths, 2nd ed. (University of Arizona Press, 2015), loc. 3726; Marion De Grazia의 1983년 5월 6일 "Dear Papa"편지 인용, DeGrazia Foundation Archives, series 1, box 2, folder 19.
 
 [5]: James W. Johnson 및 Marilyn D. Johnson, De Grazia: The Man and the Myths, 2nd ed. (University of Arizona Press, 2015), loc. 3266.
-```
 
 <div class="content-ad"></div>
 

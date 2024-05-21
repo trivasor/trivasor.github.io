@@ -31,14 +31,13 @@ link: "https://medium.com/@archk852/peace-in-the-middle-of-mayhem-7b30d8351fb8"
 
 <div class="content-ad"></div>
 
-```
+
 ![Peace in the middle of mayhem 4](/assets/img/2024-05-19-Peaceinthemiddleofmayhem_4.png)
-```
 
-```
+
+
 ![Peace in the middle of mayhem 5](/assets/img/2024-05-19-Peaceinthemiddleofmayhem_5.png)
-```
 
-```
+
+
 ![Peace in the middle of mayhem 6](/assets/img/2024-05-19-Peaceinthemiddleofmayhem_6.png)
-```

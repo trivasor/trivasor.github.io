@@ -91,7 +91,7 @@ ANDO storefront는 정교하게 제작된 아름다운 나무 수공구가 단 �
 
 <div class="content-ad"></div>
 
-```markdown
+
 ![image1](/assets/img/2024-05-21-KYOTOJapangetsabadrapforOVERTOURISMbutisactuallyBETTERthanmosttopdestinations_8.png)
 
 일본의 대부분의 시골 지역에서는 몇몇 고풍스러운 전통 가옥이 있는 거리들을 찾을 수 있지만, 교토에서는 고전적이고 역사적이며 독특한 고품질 기술, 작지만 잘 활용된 작은 거리와 골목, 화분, 작은 신사, 그리고 대부분의 거리에 사용되는 소방 안전 버킷 등 많은 매력들이 보여집니다.
@@ -99,7 +99,7 @@ ANDO storefront는 정교하게 제작된 아름다운 나무 수공구가 단 �
 ![image2](/assets/img/2024-05-21-KYOTOJapangetsabadrapforOVERTOURISMbutisactuallyBETTERthanmosttopdestinations_9.png)
 
 # 자전거 친화적인 거리들
-```
+
 
 <div class="content-ad"></div>
 
