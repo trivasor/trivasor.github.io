@@ -21,7 +21,6 @@ link: "https://medium.com/write-a-catalyst/the-burning-face-in-the-fire-7566dac4
 
 <div class="content-ad"></div>
 
-```markdown
 ![The Burning Face In The Fire](/assets/img/2024-05-27-TheBurningFaceInTheFire_1.png)
 
 내 작은 불 캐릭터가 꽤 귀여워 보여서 페이스북에 올렸고 다른 사람들이 무엇을 보는지 물어보았어요. 이 귀여운 불 캐릭터 모습이 불 구덩이에서 나오는 것을 다른 사람들도 보게 될까 궁금했죠.
@@ -29,11 +28,9 @@ link: "https://medium.com/write-a-catalyst/the-burning-face-in-the-fire-7566dac4
 그 '귀여운' 작은 사진을 올린 후에는 밤에 찍고 싶었던 달 사진을 위해 핸드폰 배터리를 아껴야 해서 와이파이를 끄기로 결정했습니다. 다음 날 아침, 다시 와이파이를 켤 때 불에 얼굴이 있다는 많은 댓글들로 헷갈렸어요. 사진을 자세히 살펴보니 그때야 비로소 보였죠.
 
 사진 속 인간 같은 얼굴은 보이시나요?
-```
 
 <div class="content-ad"></div>
 
-```markdown
 ![2024-05-27-TheBurningFaceInTheFire_2.png](/assets/img/2024-05-27-TheBurningFaceInTheFire_2.png)
 
 ![2024-05-27-TheBurningFaceInTheFire_3.png](/assets/img/2024-05-27-TheBurningFaceInTheFire_3.png)
@@ -41,7 +38,6 @@ link: "https://medium.com/write-a-catalyst/the-burning-face-in-the-fire-7566dac4
 빛의 일종으로 보일 수 있는 트릭이라고 생각되지만… 이건 사람 얼굴이 불긴 것처럼 보이잖아요! 아이고, 이건 극장판이네요!
 
 제 귀염둥이 라바 맨에게 침해당한게 몹시 싫어요! 절대 안돼요! 그냥 아니에요! 하아!
-```  
 
 <div class="content-ad"></div>
 
