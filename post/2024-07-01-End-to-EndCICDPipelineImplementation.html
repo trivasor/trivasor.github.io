@@ -1,0 +1,641 @@
+<!DOCTYPE html><html lang="ko"><head><meta charSet="utf-8"/><title>End-to-End CI CD 파이프라인 구현하는 방법 | trivasor</title><meta name="description" content=""/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta property="og:url" content="https://trivasor.github.io///post/2024-07-01-End-to-EndCICDPipelineImplementation" data-gatsby-head="true"/><meta property="og:type" content="website" data-gatsby-head="true"/><meta property="og:site_name" content="End-to-End CI CD 파이프라인 구현하는 방법 | trivasor" data-gatsby-head="true"/><meta property="og:title" content="End-to-End CI CD 파이프라인 구현하는 방법 | trivasor" data-gatsby-head="true"/><meta property="og:description" content="" data-gatsby-head="true"/><meta property="og:image" content="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_0.png" data-gatsby-head="true"/><meta property="og:locale" content="en_US" data-gatsby-head="true"/><meta name="twitter:card" content="summary_large_image" data-gatsby-head="true"/><meta property="twitter:domain" content="https://trivasor.github.io/" data-gatsby-head="true"/><meta property="twitter:url" content="https://trivasor.github.io///post/2024-07-01-End-to-EndCICDPipelineImplementation" data-gatsby-head="true"/><meta name="twitter:title" content="End-to-End CI CD 파이프라인 구현하는 방법 | trivasor" data-gatsby-head="true"/><meta name="twitter:description" content="" data-gatsby-head="true"/><meta name="twitter:image" content="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_0.png" data-gatsby-head="true"/><meta name="twitter:data1" content="Dev | trivasor" data-gatsby-head="true"/><meta name="article:published_time" content="2024-07-01 00:17" data-gatsby-head="true"/><meta name="next-head-count" content="19"/><meta name="google-site-verification" content="a-yehRo3k3xv7fg6LqRaE8jlE42e5wP2bDE_2F849O4"/><link rel="stylesheet" href="/favicons/favicon.ico"/><link rel="icon" type="image/png" sizes="16x16" href="/assets/favicons/favicon-16x16.png"/><link rel="icon" type="image/png" sizes="32x32" href="/assets/favicons/favicon-32x32.png"/><link rel="icon" type="image/png" sizes="96x96" href="/assets/favicons/favicon-96x96.png"/><link rel="icon" href="/favicons/apple-icon-180x180.png"/><link rel="apple-touch-icon" href="/favicons/apple-icon-180x180.png"/><link rel="apple-touch-startup-image" href="/startup.png"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black"/><meta name="msapplication-config" content="/favicons/browserconfig.xml"/><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-3YBJV3062F"></script><script>window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+          
+            gtag('config', 'G-3YBJV3062F');</script><link rel="preload" href="/_next/static/css/6e57edcf9f2ce551.css" as="style"/><link rel="stylesheet" href="/_next/static/css/6e57edcf9f2ce551.css" data-n-g=""/><link rel="preload" href="/_next/static/css/b8ef307c9aee1e34.css" as="style"/><link rel="stylesheet" href="/_next/static/css/b8ef307c9aee1e34.css" data-n-p=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js"></script><script src="/_next/static/chunks/webpack-ee6df16fdc6dae4d.js" defer=""></script><script src="/_next/static/chunks/framework-46611630e39cfdeb.js" defer=""></script><script src="/_next/static/chunks/main-cf4a52eec9a970a0.js" defer=""></script><script src="/_next/static/chunks/pages/_app-6fae11262ee5c69b.js" defer=""></script><script src="/_next/static/chunks/75fc9c18-ac4aa08aae62f90e.js" defer=""></script><script src="/_next/static/chunks/463-0429087d4c0b0335.js" defer=""></script><script src="/_next/static/chunks/pages/post/%5Bslug%5D-f364c00e70022c72.js" defer=""></script><script src="/_next/static/b8U7s_RvqNSxLMq8QFXiX/_buildManifest.js" defer=""></script><script src="/_next/static/b8U7s_RvqNSxLMq8QFXiX/_ssgManifest.js" defer=""></script></head><body><div id="__next"><header class="Header_header__Z8PUO"><div class="Header_inner__tfr0u"><strong class="Header_title__Otn70"><a href="/">Trivasor</a></strong><nav class="Header_nav_area__6KVpk"><a class="nav_item" href="/posts/1">Posts</a></nav></div></header><main class="posts_container__NyRU3"><div class="posts_inner__i3n_i"><h1 class="posts_post_title__EbxNx">End-to-End CI CD 파이프라인 구현하는 방법</h1><div class="posts_meta__cR7lu"><div class="posts_profile_wrap__mslMl"><div class="posts_profile_image_wrap__kPikV"><img alt="End-to-End CI CD 파이프라인 구현하는 방법" loading="lazy" width="44" height="44" decoding="async" data-nimg="1" class="profile" style="color:transparent" src="/favicons/apple-icon-114x114.png"/></div><div class="posts_textarea__w_iKT"><span class="writer">Trivasor</span><span class="posts_info__5KJdN"><span class="posts_date__ctqHI">Posted On Jul 1, 2024</span><span class="posts_reading_time__f7YPP">20<!-- --> min read</span></span></div></div><img alt="" loading="lazy" width="50" height="50" decoding="async" data-nimg="1" class="posts_view_badge__tcbfm" style="color:transparent" src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fallround-coder.github.io/post/2024-07-01-End-to-EndCICDPipelineImplementation&amp;count_bg=%2379C83D&amp;title_bg=%23555555&amp;icon=&amp;icon_color=%23E7E7E7&amp;title=views&amp;edge_flat=false"/></div><article class="posts_post_content__n_L6j"><div><!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1" name="viewport">
+</head>
+<body>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_0.png" alt="이미지"></p>
+<h1>소개</h1>
+<p>현대 소프트웨어 개발에서는 지속적 통합과 지속적 배포(CI/CD)가 중요합니다. 이는 자동화된 코드 통합과 신뢰할 수 있는 애플리케이션 전달을 용이하게 합니다.</p>
+<p>Jenkins는 유연성과 다양한 플러그인 옵션으로 유명하여, CI/CD 파이프라인을 만드는 데 선도하는 도구입니다.</p>
+<div class="content-ad"></div>
+<p>이 블로그 포스트에서는 Jenkins를 사용한 CI/CD 파이프라인의 전체 설정을 안내합니다. 젠킨스 구성부터 버전 관리 시스템과 통합, 빌드, 테스트, 배포 오케스트레이션까지 모두 다룰 예정입니다. 소프트웨어 전달 프로세스를 개선하는 데 도움이 되도록 제작되었습니다.</p>
+<h1>사용된 도구 및 기술</h1>
+<p>이 안내서에서는 다음과 같은 다양한 기술과 도구를 활용할 예정입니다:</p>
+<ul>
+<li>버전 관리를 위한 GitHub</li>
+<li>프로젝트 관리 및 빌드를 위한 Maven</li>
+<li>코드 품질 분석을 위한 SonarQube</li>
+<li>컨테이너화를 위한 Docker</li>
+<li>Continuous Integration을 위한 Jenkins</li>
+<li>쿠버네티스 배포 관리를 위한 ArgoCD 및 Helm</li>
+<li>컨테이너 오케스트레이션을 위한 쿠버네티스</li>
+</ul>
+<div class="content-ad"></div>
+<p>LinkedIn에서 연락할 것이 있으면 언제든지 연락해주세요.</p>
+<h1>Git 설정하기</h1>
+<p>자바 애플리케이션의 Jenkins 파이프라인을 위한 기반을 설정하기 위해 Git을 구성하는 것부터 시작해보겠습니다:</p>
+<ul>
+<li>개인 Git 저장소 만들기:</li>
+</ul>
+<div class="content-ad"></div>
+<ul>
+<li>원하는 Git 호스팅 플랫폼(예: GitHub, GitLab)을 방문해주세요.</li>
+<li>계정에 로그인하거나 계정이 없다면 가입해주세요.</li>
+<li>새 저장소를 만들어주세요. 코드를 보호하기 위해 가시성을 비공개로 설정하는 것을 잊지 마세요.</li>
+</ul>
+<ol start="2">
+<li>개인 액세스 토큰 생성하기:</li>
+</ol>
+<ul>
+<li>계정 설정으로 이동해주세요. 프로필 아래나 드롭다운 메뉴에서 찾을 수 있습니다.</li>
+<li>"개발자 설정" 또는 "개인 액세스 토큰" 라벨이 있는 섹션을 찾아주세요.</li>
+<li>새 토큰을 생성하고 'repo'와 같은 필요한 권한을 할당해주세요.</li>
+<li>이 토큰을 안전하게 복사하고 보관해주세요. Jenkins 파이프라인에서 액세스를 구성하는 데 나중에 필요할 것입니다.</li>
+</ul>
+<ol start="3">
+<li>저장소를 로컬로 복제하기:</li>
+</ol>
+<div class="content-ad"></div>
+<ul>
+<li>여기서 소스 코드를 찾으세요.</li>
+<li>Git Bash나 터미널을 열어주세요.</li>
+<li>저장소를 복제하고 싶은 디렉토리로 이동해주세요.</li>
+<li>다음 명령을 실행해주세요. <code>&#x3C;URL></code> 부분은 귀하의 저장소 URL로 교체해주세요:</li>
+</ul>
+<pre><code class="hljs language-js">git clone &#x3C;<span class="hljs-variable constant_">URL</span>>
+</code></pre>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_1.png" alt="이미지"></p>
+<h1>EC2 인스턴스 생성하기</h1>
+<div class="content-ad"></div>
+<p>지금 우리는 테라폼을 사용하여 자동화할 수도 있지만, 이해를 돕기 위해 이 과정을 수동으로 진행하겠습니다.</p>
+<ol>
+<li>
+<p>AWS 콘솔에 로그인합니다:</p>
+<ul>
+<li>AWS 관리 콘솔에 접속하세요.</li>
+<li>AWS 계정 자격 증명을 사용하여 로그인하세요. 계정이 없는 경우 새로 생성해야 합니다.</li>
+</ul>
+</li>
+<li>
+<p>EC2 대시보드로 이동합니다:</p>
+</li>
+</ol>
+<div class="content-ad"></div>
+<ul>
+<li>콘솔 상단에 있는 "Services" 메뉴를 찾아주세요.</li>
+<li>"Compute" 섹션 아래에 있는 "EC2"를 클릭하여 EC2 대시보드로 이동해주세요.</li>
+</ul>
+<ol start="3">
+<li>인스턴스 시작:</li>
+</ol>
+<ul>
+<li>"인스턴스 시작" 버튼을 클릭해주세요. 이로써 새로운 EC2 인스턴스를 생성하는 프로세스가 시작됩니다.</li>
+</ul>
+<ol start="4">
+<li>태그 추가:</li>
+</ol>
+<div class="content-ad"></div>
+<ol start="5">
+<li>
+<p>이미지 태그와 이름을 추가하여 인스턴스를 더 잘 정리하고 관리합니다.</p>
+<ul>
+<li>
+<p>AMI 선택:</p>
+</li>
+<li>
+<p>사전 구성된 서버 템플릿인 AMI 목록이 표시됩니다. 이것들은 다른 운영 체제와 설정을 포함할 수 있습니다.</p>
+</li>
+<li>
+<p>요구 사항에 맞는 AMI를 선택하십시오. 초보자에게는 Amazon Linux AMI나 기본 Ubuntu Server가 가장 쉬운 옵션이 될 수 있습니다.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>인스턴스 유형 선택:</p>
+</li>
+</ol>
+<div class="content-ad"></div>
+<ul>
+<li>필요에 맞는 인스턴스 유형을 선택하세요.</li>
+<li>기본 옵션(일반적으로 t2.micro 인스턴스)은 테스트와 소규모 워크로드에 적합하며 무료 티어 대상입니다.</li>
+<li>저는 t2.large 인스턴스를 선택했는데, 2개의 vCPU와 8 GiB의 메모리를 제공하여 중간 규모의 워크로드를 처리하기에 적합합니다.</li>
+<li>이 인스턴스 유형을 활용하면 요금이 발생하니, 예산을 효과적으로 관리하기 위해 AWS의 최신 요금 정보를 확인하는 것이 중요합니다.</li>
+</ul>
+<ol start="7">
+<li>키페어 생성:</li>
+</ol>
+<ul>
+<li>키페어를 생성하거나 기존 것을 사용하세요. 이 키페어는 인스턴스에 대한 SSH 액세스에 중요합니다.</li>
+<li>개인 키 파일(.pem 파일)을 다운로드하고 안전한 곳에 보관하세요. 생성된 후에는 다시 다운로드할 수 없습니다.</li>
+</ul>
+<ol start="8">
+<li>인스턴스 세부정보 구성:</li>
+</ol>
+<div class="content-ad"></div>
+<ol start="9">
+<li>보안 그룹 구성:</li>
+</ol>
+<ul>
+<li>보안 그룹은 인스턴스로부터 허용되는 및 송수신되는 트래픽을 제어하는 가상 방화벽 역할을 합니다.</li>
+<li>새로운 보안 그룹을 생성하거나 이미 있는 것을 선택할 수 있습니다. SSH (포트 22), 사용자 정의 TCP (8080) 및 사용자 정의 TCP (9000)와 같은 인바운드 포트를 열어두었는지 확인해주세요.</li>
+</ul>
+<ol start="10">
+<li>스토리지 추가:</li>
+</ol>
+<div class="content-ad"></div>
+<ul>
+<li>루트 볼륨의 크기를 지정합니다 (일반적으로 기본 설정이 테스트 목적으로 적합합니다).</li>
+</ul>
+<ol start="11">
+<li>검토 및 시작:</li>
+</ol>
+<ul>
+<li>인스턴스 설정을 확인하세요. AMI 세부 정보, 인스턴스 유형, 보안 그룹 및 키페어를 확인합니다.</li>
+<li>계속하려면 "시작"을 클릭하세요.</li>
+</ul>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_2.png" alt="이미지"></p>
+<div class="content-ad"></div>
+<h1>인스턴스에 액세스하기</h1>
+<p>인스턴스가 시작되면 초기화하는 데 몇 분이 걸릴 것입니다.</p>
+<p>그런 다음 다운로드한 .pem 파일을 사용하여 SSH를 통해 인스턴스에 연결할 수 있습니다.</p>
+<p>Windows 기기에서 EC2 인스턴스에 SSH하기 위해 Mobaxterm을 사용하고 있습니다.</p>
+<div class="content-ad"></div>
+<ul>
+<li>MobaXterm을 다운로드하고 설치하세요.</li>
+<li>데스크톱이나 시작 메뉴에서 MobaXterm을 엽니다.</li>
+<li>"세션" 버튼을 클릭한 후 "SSH"를 선택하세요.</li>
+<li>서버의 IP 주소 또는 호스트 이름을 입력하고 사용자 이름을 지정하세요.</li>
+<li>"고급 SSH 설정"을 클릭한 후 "개인 키 사용"란을 체크하고 인스턴스에서 사용한 개인 키 쌍을 선택하세요.</li>
+<li>"확인"을 클릭하여 연결하세요.</li>
+</ul>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_3.png" alt="이미지"></p>
+<h1>Jenkins 설정하기</h1>
+<p>Java 설치하기:</p>
+<div class="content-ad"></div>
+<p>제단을 실행하기 전에 서버에 Java를 설치해야 합니다. Jenkins는 OpenJDK와 Oracle Java 둘 다 호환되지만, 일반적으로 OpenJDK에서 최적의 성능을 발휘합니다.</p>
+<p>SSH로 접속한 인스턴스에 Java를 설치하는 방법은 다음과 같습니다:</p>
+<pre><code class="hljs language-js">sudo apt update
+sudo apt install openjdk-<span class="hljs-number">11</span>-jdk
+java -version
+</code></pre>
+<p>제단을 설치하세요:</p>
+<div class="content-ad"></div>
+<p>이제 서버에 Java가 설치되어 있고 준비가 되었으므로 다음 단계는 Jenkins를 설치하는 것입니다. 설치를 진행하는 두 가지 옵션이 있습니다: 스크립트 사용 또는 수동 명령 실행.</p>
+<p>스크립트 사용은 효율적이고 재현 가능하며 Jenkins를 여러 번 배포하거나 다른 환경에서 일관된 설정을 유지하려는 경우에 특히 좋습니다.</p>
+<ul>
+<li>'vim' 또는 원하는 기타 편집기를 사용하여 스크립트 파일을 생성합니다.</li>
+</ul>
+<pre><code class="hljs language-bash">vim install_jenkins.sh
+</code></pre>
+<div class="content-ad"></div>
+<ul>
+<li>i키를 눌러 삽입 모드로 전환한 후 스크립트를 작성하세요.</li>
+</ul>
+<pre><code class="hljs language-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-comment"># Jenkins GPG 키 다운로드</span>
+sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
+  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+
+<span class="hljs-comment"># 패키지 관리자 소스에 Jenkins 저장소 추가</span>
+<span class="hljs-built_in">echo</span> deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo <span class="hljs-built_in">tee</span> \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+
+<span class="hljs-comment"># 패키지 관리자 저장소 업데이트</span>
+sudo apt-get update
+
+<span class="hljs-comment"># Jenkins 설치</span>
+sudo apt-get install jenkins -y
+</code></pre>
+<ul>
+<li>:wq를 입력한 후 Enter를 눌러 변경 사항을 파일에 저장하고 에디터를 종료합니다.</li>
+<li>다음 명령을 사용하여 파일을 실행 가능하게 만드세요:</li>
+</ul>
+<pre><code class="hljs language-bash"><span class="hljs-built_in">chmod</span> +x install_jenkins.sh 
+</code></pre>
+<div class="content-ad"></div>
+<ul>
+<li>스크립트를 실행할 수 있게 되었으니, Jenkins를 설치하기 위해 스크립트를 실행할 차례입니다:</li>
+</ul>
+<pre><code class="hljs language-bash">./install_jenkins.sh
+</code></pre>
+<p>방화벽 설정 조정:</p>
+<p>웹 브라우저를 통해 Jenkins에 접속할 수 있도록 하려면, 방화벽 설정을 제대로 구성하는 것이 중요합니다.</p>
+<div class="content-ad"></div>
+<p>젠킨스는 기본적으로 8080 포트에서 실행됩니다. 따라서 보안 그룹 설정에서 이 포트로의 인바운드 트래픽을 허용해야 합니다.</p>
+<p>젠킨스 UI에 액세스하기:</p>
+<p>젠킨스 UI에 접속하려면 웹 브라우저를 열고 인스턴스의 IP 주소에 :8080 을 추가하여 입력하세요 (예: <a href="http://192.168.1.2:8080" rel="nofollow" target="_blank">http://192.168.1.2:8080</a>). 192.168.1.2를 실제 서버의 IP 주소로 대체하세요.</p>
+<p>초기 관리자 암호를 사용하여 젠킨스를 잠금 해제하세요. 암호는 다음 위치에서 찾을 수 있습니다:</p>
+<div class="content-ad"></div>
+<pre><code class="hljs language-js">sudo cat /<span class="hljs-keyword">var</span>/lib/jenkins/secrets/initialAdminPassword
+</code></pre>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_4.png" alt="이미지"></p>
+<p>추천 플러그인 설치하기:</p>
+<ul>
+<li>Jenkins를 잠금 해제하면 추천 플러그인을 설치하거나 특정 플러그인을 수동으로 선택할 수 있는 옵션이 제공됩니다.</li>
+<li>대부분의 사용자들에게 권장되는 표준 플러그인 세트를 자동으로 설치하려면 '추천 플러그인 설치'를 클릭해주세요.</li>
+</ul>
+<div class="content-ad"></div>
+<p>마스터 환경 변수</p>
+<ul>
+<li>마스터가 시작될 때 특정 환경 변수 설정이 필요한 경우 환경 변수를 추가할 수 있습니다.</li>
+<li>'Manage Jenkins'에서 'Configure System'에 들어가서 'Global properties' 섹션에서 'Environment variables'를 설정합니다.</li>
+</ul>
+<div class="content-ad"></div>
+<p>제이킨스 설정 완료:</p>
+<ul>
+<li>제이킨스는 제이킨스 인스턴스의 URL을 구성하도록 요청할 것입니다.</li>
+<li>기본 URL(서버 IP 및 포트에 기반)이 자동으로 입력됩니다.</li>
+<li>설정을 완료하고 제이킨스 대시보드로 이동하려면 "제이킨스 사용 시작"을 클릭하세요.</li>
+</ul>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_7.png" alt="이미지"></p>
+<p>필요한 플러그인 설치하기:</p>
+<div class="content-ad"></div>
+<ul>
+<li>Jenkins 대시보드 열기: Jenkins 인터페이스에 로그인하세요.</li>
+<li>“관리 Jenkins > 플러그인”으로 이동하세요.</li>
+<li>플러그인 설치: “docker pipeline” 및 “sonarqube scanner” 플러그인을 찾아 설치하고 필요한 경우 Jenkins를 재시작하세요.</li>
+</ul>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_8.png" alt="이미지"></p>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_9.png" alt="이미지"></p>
+<h1>컴파일 작업</h1>
+<div class="content-ad"></div>
+<ul>
+<li>Jenkins 메인 대시보드에서 "새 항목"을 클릭합니다.</li>
+<li>파이프라인의 이름을 지정하고 프로젝트 유형으로 '파이프라인'을 선택한 후 '확인'을 클릭합니다.</li>
+</ul>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_10.png" alt="pipeline"></p>
+<p>파이프라인 구성:</p>
+<ul>
+<li>생성된 작업을 클릭하고 구성 화면에서 "파이프라인" 섹션으로 스크롤합니다.</li>
+<li>"파이프라인 스크립트" 또는 "SCM에서 파이프라인 스크립트"를 선택합니다.</li>
+</ul>
+<div class="content-ad"></div>
+<p>첫 번째 옵션은 Jenkins 인터페이스에서 Groovy 스크립트를 직접 작성하는 것이고, 두 번째 옵션은 스크립트를 Git과 같은 소스 코드 관리 시스템에서 가져오는 것입니다.</p>
+<ul>
+<li>"SCM에서 파이프라인 스크립트": SCM 유형을 선택하세요 (예: Git).</li>
+<li>Jenkinsfile이 포함된 저장소의 URL을 입력하세요.</li>
+<li>저장소가 비공개인 경우 자격 증명을 추가하세요.</li>
+<li>빌드할 브랜치를 지정하세요. 일반적으로 */main 또는 */master입니다.</li>
+<li>Jenkinsfile이 서브디렉토리에 있거나 다르게 명명된 경우 경로를 지정하세요 (기본값은 Jenkinsfile).</li>
+</ul>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_11.png" alt="이미지"></p>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_12.png" alt="이미지"></p>
+<div class="content-ad"></div>
+<p>Jenkins 재시작하기:</p>
+<ul>
+<li>구성 변경이나 업데이트를 효과적으로 적용하기 위해 Jenkins를 재시작하세요.</li>
+<li>이를 위해 Jenkins '대시보드'로 이동하고 사이드바에서 'Jenkins 관리'를 클릭하세요.</li>
+<li>거기서 "디스크에서 구성 다시로드" 또는 "안전하게 재시작"을 선택하세요.</li>
+</ul>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_13.png" alt="Jenkins 재시작"></p>
+<h1>Sonarqube 서버 설정하기</h1>
+<div class="content-ad"></div>
+<p>Docker 컨테이너로 SonarQube를 설치하는 것은 설정 프로세스를 간단히 하고 관리 및 확장을 쉽게 만드는 인기 있는 옵션입니다.</p>
+<p>설치 전 요구 사항: 서버에 Docker가 설치되어 있는지 확인해주세요. 만약 설치되어 있지 않다면 공식 Docker 웹사이트에서 Docker를 다운로드하고 설치할 수 있습니다.</p>
+<p>Docker 설치:</p>
+<ul>
+<li>'vim' 또는 사용하고자 하는 다른 편집기를 사용하여 스크립트 파일을 만들어주세요.</li>
+</ul>
+<div class="content-ad"></div>
+<pre><code class="hljs language-js">install_docker.<span class="hljs-property">sh</span>
+</code></pre>
+<ul>
+<li>삽입 모드에 들어가기 위해 i를 누르세요. 그리고 스크립트를 작성하세요.</li>
+</ul>
+<pre><code class="hljs language-bash"><span class="hljs-meta">#!/bin/bash</span>
+
+<span class="hljs-comment"># 패키지 관리자 저장소 업데이트</span>
+sudo apt-get update
+
+<span class="hljs-comment"># 필요한 종속성 설치</span>
+sudo apt-get install -y ca-certificates curl
+
+<span class="hljs-comment"># Docker GPG 키를 위한 디렉토리 생성</span>
+sudo install -m 0755 -d /etc/apt/keyrings
+
+<span class="hljs-comment"># Docker의 GPG 키 다운로드</span>
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+
+<span class="hljs-comment"># 키에 적절한 권한 부여</span>
+sudo <span class="hljs-built_in">chmod</span> a+r /etc/apt/keyrings/docker.asc
+
+<span class="hljs-comment"># Docker 저장소를 Apt 소스에 추가</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"deb [arch=<span class="hljs-subst">$(dpkg --print-architecture)</span> signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+<span class="hljs-subst">$(. /etc/os-release &#x26;&#x26; echo <span class="hljs-string">"<span class="hljs-variable">$VERSION_CODENAME</span>"</span>)</span> stable"</span> | \
+sudo <span class="hljs-built_in">tee</span> /etc/apt/sources.list.d/docker.list > /dev/null
+
+<span class="hljs-comment"># 패키지 관리자 저장소 업데이트</span>
+sudo apt-get update
+
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin 
+</code></pre>
+<ul>
+<li>정상 모드로 변경하시려면 Esc를 눌러서 normal 모드로 전환한 후 :wq를 입력한 후 Enter 키를 눌러주세요.</li>
+<li>파일을 실행 가능하게 만드는 명령어를 사용하세요.</li>
+</ul>
+<div class="content-ad"></div>
+<pre><code class="hljs language-js">chmod +x install_docker.<span class="hljs-property">sh</span>
+</code></pre>
+<p>이제 스크립트가 실행 가능하니 Docker를 설치하려면 다음과 같이 실행하면 됩니다:</p>
+<pre><code class="hljs language-js">./install_docker.<span class="hljs-property">sh</span>
+</code></pre>
+<p>Sonarqube 설치하라:</p>
+<div class="content-ad"></div>
+<ul>
+<li>도커 허브에서 공식 SonarQube 도커 이미지를 가져옵시다:</li>
+</ul>
+<pre><code class="hljs language-js">docker pull sonarqube
+</code></pre>
+<ul>
+<li>다음 명령어를 사용하여 도커 컨테이너에서 SonarQube를 실행해보세요.</li>
+</ul>
+<pre><code class="hljs language-js">docker run -d --name sonarqube -p <span class="hljs-number">9000</span>:<span class="hljs-number">9000</span> sonarqube
+</code></pre>
+<div class="content-ad"></div>
+<p>SonarQube는 기본적으로 9000번 포트에서 작동합니다. SonarQube 대시보드에 원활하게 접속하기 위해 방화벽을 구성하여이 포트의 들어오는 트래픽을 허용하는 것이 중요합니다.</p>
+<p>브라우저에서 http://<code>your_instance_ip</code>:9000을 입력하여 SonarQube에 액세스하십시오. <code>your_instance_ip</code>를 서버의 IP 주소로 대체하십시오.</p>
+<p>SonarQube의 기본 로그인 자격 증명은 다음과 같습니다:</p>
+<ul>
+<li>사용자 이름: admin</li>
+<li>비밀번호: admin</li>
+</ul>
+<div class="content-ad"></div>
+<p>하지만 보안상의 이유로 초기 설정 후에는 이러한 기본 자격 증명을 변경하는 것이 좋습니다.</p>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_14.png" alt="image"></p>
+<p>Jenkins와 통합하기:</p>
+<ul>
+<li>Jenkins 플러그인을 위한 SonarQube Scanner를 설치합니다.</li>
+<li>SonarQube 대시보드에 로그인합니다.</li>
+<li>"내 계정"으로 이동하여 "보안"을 클릭하고 "토큰 생성"을 클릭합니다.</li>
+<li>토큰에 이름을 지정하고 "생성"을 클릭합니다.</li>
+<li>생성된 토큰을 복사합니다.</li>
+</ul>
+<div class="content-ad"></div>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_15.png" alt="이미지"></p>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_16.png" alt="이미지"></p>
+<p>Jenkins에 SonarQube 토큰을 자격 인증으로 추가하는 방법:</p>
+<ul>
+<li>Jenkins에서 “Jenkins 관리” > “자격 증명” > “시스템” > “전역 자격 증명”(또는 프로젝트 자격 증명으로 이동).</li>
+<li>“자격 증명 추가”를 클릭합니다.</li>
+<li>자격 증명의 종류로 “비밀 텍스트”를 선택합니다.</li>
+<li>SonarQube 인증 토큰을 “비밀” 필드에 붙여 넣습니다.</li>
+<li>자격 증명의 ID와 설명을 선택적으로 제공합니다.</li>
+<li>자격 증명을 저장하려면 “생성”을 클릭합니다.</li>
+</ul>
+<div class="content-ad"></div>
+<p>이미지태그를 Markdown 형식으로 바꿔줍시다.</p>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_17.png" alt="이미지 이름"></p>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_18.png" alt="이미지 이름"></p>
+<p>Jenkins SonarQube Scanner 설정:</p>
+<ul>
+<li>Jenkins 작업 구성에서 SonarQube 분석 섹션 또는 해당 섹션 이름을 찾아보세요.</li>
+<li>SonarQube 서버 URL을 제공합니다(e.g.,http://<code>your_instance_ip</code>:9000, <code>your_instance_ip</code>을 서버의 IP 주소로 대체하세요).</li>
+<li>이전에 추가한 SonarQube 토큰을 인증 토큰으로 사용하세요.</li>
+</ul>
+<div class="content-ad"></div>
+<h1>자격증</h1>
+<p>CI/CD 파이프라인에 필요한 모든 자격증이 올바르게 구성되어 있는지 확인하세요.</p>
+<p>SonarQube 인증, Docker Hub 접근 및 Git 저장소 인증을 위한 자격증이 포함됩니다.</p>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_19.png" alt="이미지"></p>
+<div class="content-ad"></div>
+<h1>Jenkinsfile</h1>
+<p>Jenkinsfile은 Jenkins 파이프라인의 구성을 정의하는 텍스트 파일입니다. 이는 Java 플랫폼을 위한 스크립팅 언어 인 Groovy로 작성됩니다.</p>
+<p>Jenkinsfile은 파이프라인 작업을 실행할 때 Jenkins가 실행해야하는 단계, 스테이지 및 작업을 지정합니다.</p>
+<p>Jenkins 파일의 일부는 자격 증명 및 세부 정보로 교체해야 할 부분이 있으니 주의해야 합니다.</p>
+<div class="content-ad"></div>
+<p>Pipeline Stages:</p>
+<p>Stage 1: Git에서 소스 코드를 확인합니다.</p>
+<p>Stage 2: Maven을 사용하여 Java 애플리케이션을 빌드합니다.</p>
+<p>Stage 3: JUnit과 Mockito를 사용하여 단위 테스트를 실행합니다.</p>
+<div class="content-ad"></div>
+<h2>Stage 4: 코드 품질을 확인하기 위해 SonarQube 분석 실행</h2>
+<h2>Stage 5: 어플리케이션을 JAR 파일로 패키징</h2>
+<h2>Stage 6: Helm을 사용하여 어플리케이션을 테스트 환경에 배포</h2>
+<h2>Stage 7: 배포된 어플리케이션에서 사용자 수락 테스트 실행</h2>
+<div class="content-ad"></div>
+<p><strong>Stage 8: Helm을 사용하여 애플리케이션을 프로덕션 환경으로 프로모션하기</strong></p>
+<pre><code class="hljs language-js">파이프라인 {
+  에이전트 {
+    도커 {
+      이미지 <span class="hljs-string">'abhishekf5/maven-abhishek-docker-agent:v1'</span>
+      args <span class="hljs-string">'--user root -v /var/run/docker.sock:/var/run/docker.sock'</span> <span class="hljs-comment">// 호스트의 도커 데몬에 액세스하기 위해 도커 소켓을 마운트</span>
+    }
+  }
+  stages {
+    <span class="hljs-title function_">stage</span>(<span class="hljs-params"><span class="hljs-string">'Checkout'</span></span>) {
+      steps {
+        sh <span class="hljs-string">'echo passed'</span>
+        <span class="hljs-comment">//git branch: 'main', url: 'https://github.com/wangoimwangi/jenkins-CICD.git'</span>
+      }
+    }
+    <span class="hljs-title function_">stage</span>(<span class="hljs-params"><span class="hljs-string">'Build and Test'</span></span>) {
+      steps {
+        sh <span class="hljs-string">'ls -ltr'</span>
+        <span class="hljs-comment">// 프로젝트 빌드하고 JAR 파일 생성</span>
+        sh <span class="hljs-string">'cd spring-boot-app &#x26;&#x26; mvn clean package'</span>
+      }
+    }
+    <span class="hljs-title function_">stage</span>(<span class="hljs-params"><span class="hljs-string">'정적 코드 분석'</span></span>) {
+      environment {
+        <span class="hljs-variable constant_">SONAR_URL</span> = <span class="hljs-string">"http://54.252.140.131:9000"</span>
+      }
+      steps {
+        <span class="hljs-title function_">withCredentials</span>(<span class="hljs-params">[string(credentialsId: <span class="hljs-string">'sonarqube'</span>, variable: <span class="hljs-string">'SONAR_AUTH_TOKEN'</span>)]</span>) {
+          sh <span class="hljs-string">'cd spring-boot-app &#x26;&#x26; mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'</span>
+        }
+      }
+    }
+    <span class="hljs-title function_">stage</span>(<span class="hljs-params"><span class="hljs-string">'Docker 이미지 빌드 및 푸시'</span></span>) {
+      environment {
+        <span class="hljs-variable constant_">DOCKER_IMAGE</span> = <span class="hljs-string">"ultimate-cicd:${BUILD_NUMBER}"</span>
+        <span class="hljs-comment">// DOCKERFILE_LOCATION = "spring-boot-app/Dockerfile"</span>
+        <span class="hljs-variable constant_">REGISTRY_CREDENTIALS</span> = <span class="hljs-title function_">credentials</span>(<span class="hljs-string">'docker-cred'</span>)
+      }
+      steps {
+        script {
+            sh <span class="hljs-string">'cd spring-boot-app &#x26;&#x26; docker build -t ${DOCKER_IMAGE} .'</span>
+            def dockerImage = docker.<span class="hljs-title function_">image</span>(<span class="hljs-string">"${DOCKER_IMAGE}"</span>)
+            docker.<span class="hljs-title function_">withRegistry</span>(<span class="hljs-params"><span class="hljs-string">'https://index.docker.io/v1/'</span>, <span class="hljs-string">"docker-cred"</span></span>) {
+                dockerImage.<span class="hljs-title function_">push</span>()
+            }
+        }
+      }
+    }
+    <span class="hljs-title function_">stage</span>(<span class="hljs-params"><span class="hljs-string">'배포 파일 업데이트'</span></span>) {
+        environment {
+            <span class="hljs-variable constant_">GIT_REPO_NAME</span> = <span class="hljs-string">"jenkins-CICD"</span>
+            <span class="hljs-variable constant_">GIT_USER_NAME</span> = <span class="hljs-string">"wangoimwangi"</span>
+        }
+        steps {
+            <span class="hljs-title function_">withCredentials</span>(<span class="hljs-params">[string(credentialsId: <span class="hljs-string">'github'</span>, variable: <span class="hljs-string">'GITHUB_TOKEN'</span>)]</span>) {
+                sh <span class="hljs-string">''</span><span class="hljs-string">'
+                    git config user.email "mariakoi800@gmail.com"
+                    git config user.name "Maria"
+                    BUILD_NUMBER=${BUILD_NUMBER}
+                    sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" spring-boot-app-manifests/deployment.yml
+                    git add spring-boot-app-manifests/deployment.yml
+                    git commit -m "Update deployment image to version ${BUILD_NUMBER}"
+                    git push @github.com/${GIT_USER_NAME}/${GIT_REPO_NAME">https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                '</span><span class="hljs-string">''</span>
+            }
+        }
+    }
+  }
+}
+</code></pre>
+<ul>
+<li>"지금 빌드"를 클릭하여 파이프라인 작업을 트리거합니다.</li>
+<li>Jenkins는 귀하의 저장소에서 Jenkinsfile을 가져와 정의된대로 실행합니다.</li>
+<li>Jenkins 대시보드에서 파이프라인 작업 진행 상황을 확인할 수 있습니다.</li>
+<li>각 파이프라인 단계가 실행될 때마다 자세한 로그와 상태 업데이트를 보려면 작업을 클릭하십시오.</li>
+<li>파이프라인 실행 중 문제가 발생하면 Jenkinsfile 및 작업 구성을 검토하여 오류를 확인하십시오.</li>
+<li>문제가 발생했을 경우 콘솔 출력과 로그를 확인하여 실패에 대한 자세한 내용을 확인하십시오.</li>
+</ul>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_20.png" alt="End-to-End CI/CD 파이프라인 구현"></p>
+<div class="content-ad"></div>
+<p>SonarQube는 파이프라인 실행 보고서를 포함하게 됩니다.</p>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_21.png" alt="Pipeline Report"></p>
+<h1>ArgoCD 설정</h1>
+<p>ArgoCD는 CI/CD 파이프라인의 지속적 배포 세그먼트를 관리하며, Kubernetes로의 배포를 자동화합니다.</p>
+<div class="content-ad"></div>
+<p>로컬 배포는 Minikube를 사용하거나 Amazon EKS를 활용한 클라우드 배포를 선택할 수 있어요.</p>
+<p>준비물:</p>
+<ul>
+<li>Minikube에서 필요로 하는 가상화를 위해 Windows 컴퓨터에 VirtualBox 또는 Hyper-V가 설치되어 있는지 확인해주세요.</li>
+</ul>
+<p>Minikube 설치하는 방법은 다음과 같아요:</p>
+<div class="content-ad"></div>
+<ul>
+<li>Minikube을 다운로드하고 설치하세요. 각 OS에 맞는 설명은 Minikube 공식 문서를 참고해주세요.</li>
+<li>로컬 Kubernetes 클러스터를 시작하세요.</li>
+</ul>
+<pre><code class="hljs language-bash">minikube start
+</code></pre>
+<p>Kubectl 설치 방법:</p>
+<ul>
+<li>공식 Kubernetes 릴리스 페이지에서 최신 버전의 kubectl을 다운로드하세요.</li>
+<li>kubectl을 PATH에 추가하여 명령 프롬프트에서 어디서든 실행할 수 있도록 해주세요.</li>
+</ul>
+<div class="content-ad"></div>
+<h1>ArgoCD 오퍼레이터 설치하기</h1>
+<p>쿠버네티스에 Argo CD를 설치하려면 Argo CD 오퍼레이터를 사용할 수 있습니다. 이 오퍼레이터는 Argo CD 인스턴스의 배포와 관리를 자동화합니다.</p>
+<ul>
+<li><a href="https://operatorhub.io" rel="nofollow" target="_blank">공식 Operator Hub 페이지</a>로 이동합니다.</li>
+<li>Operator Hub 웹사이트의 검색 바를 사용하여 "Argo CD"를 검색하고 "설치"를 클릭합니다.</li>
+<li>다음 명령어를 실행하세요:</li>
+</ul>
+<pre><code class="hljs language-shell"><span class="hljs-meta prompt_"># </span><span class="bash">Operator Lifecycle Manager (OLM)을 설치합니다. OLM은 클러스터에서 실행 중인 Operator를 관리하는 데 도움이 되는 도구입니다.</span>
+<span class="hljs-meta prompt_">
+$ </span><span class="bash">curl -sL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.27.0/install.sh | bash -s v0.27.0</span>
+</code></pre>
+<div class="content-ad"></div>
+<pre><code class="hljs language-shell"><span class="hljs-meta prompt_"># </span><span class="bash">AgroCD Operator 설치하기</span>
+kubectl create -f https://operatorhub.io/install/argocd-operator.yaml
+</code></pre>
+<ul>
+<li>이 Operator는 “operators” 네임스페이스에 설치되며, 클러스터의 모든 네임스페이스에서 사용할 수 있습니다.</li>
+</ul>
+<pre><code class="hljs language-shell"><span class="hljs-meta prompt_"># </span><span class="bash">Operator 구동 상태 확인하기</span>
+<span class="hljs-meta prompt_">$ </span><span class="bash">kubectl get csv -n operators</span>
+</code></pre>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_22.png" alt="이미지"></p>
+<div class="content-ad"></div>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_23.png" alt="이미지"></p>
+<h1>ArgoCD 컨트롤러 설정하기</h1>
+<ul>
+<li>OperatorHub.io로 이동합니다.</li>
+<li>"Argo CD" Operator에서 "Operator Documentation"으로 스크롤합니다.</li>
+<li>"Usage"를 클릭한 후 "Basics"를 클릭합니다.</li>
+<li>제공된 YAML 구성을 복사합니다. 이 YAML은 Kubernetes 클러스터에 Argo CD를 배포하는 데 사용됩니다.</li>
+</ul>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_24.png" alt="이미지"></p>
+<div class="content-ad"></div>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_25.png" alt="image"></p>
+<ul>
+<li>Argo CD 인스턴스를 정의하는 다음 내용을 포함하여 vim argocd-basic.yml이라는 새 파일을 생성하세요:</li>
+</ul>
+<pre><code class="hljs language-js"><span class="hljs-attr">apiVersion</span>: argoproj.<span class="hljs-property">io</span>/v1alpha1
+<span class="hljs-attr">kind</span>: <span class="hljs-title class_">ArgoCD</span>
+<span class="hljs-attr">metadata</span>:
+  <span class="hljs-attr">name</span>: example-argocd
+  <span class="hljs-attr">labels</span>:
+    <span class="hljs-attr">example</span>: basic
+<span class="hljs-attr">spec</span>: {}
+</code></pre>
+<ul>
+<li>구성을 적용하세요.</li>
+</ul>
+<div class="content-ad"></div>
+<pre><code class="hljs language-bash">kubectl apply -f argocd-basic.yml
+</code></pre>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_26.png" alt="ArgoCD UI"></p>
+<h1>ArgoCD UI 설정</h1>
+<ul>
+<li>브라우저를 통해 Argo CD 서버 UI에 접속하려면 서비스 유형을 'ClusterIP'에서 'NodePort'로 변경해야 합니다.</li>
+</ul>
+<div class="content-ad"></div>
+<pre><code class="hljs language-js">kubectl get svc
+</code></pre>
+<ul>
+<li>Minikube를 통해 브라우저를 통해 Argo CD 서버에 직접 액세스할 수 있는 URL을 생성할 수 있습니다.</li>
+</ul>
+<pre><code class="hljs language-js">minikube service argocd-server --url
+</code></pre>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_27.png" alt="2024-07-01-End-to-EndCICDPipelineImplementation_27.png"></p>
+<div class="content-ad"></div>
+<ul>
+<li>이전 명령어에서 표시된 URL을 복사해서 브라우저에 붙여넣어 Argo CD UI에 액세스하세요.</li>
+</ul>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_28.png" alt="Argo CD UI"></p>
+<ul>
+<li>기본 사용자 이름은 'admin'입니다. 관리자 암호를 얻으려면 Kubernetes 시크릿에서 추출해야 합니다:</li>
+</ul>
+<pre><code class="hljs language-js">kubectl get secret
+</code></pre>
+<div class="content-ad"></div>
+<ul>
+<li>"example-argocd-cluster" 시크릿을 편집하고 어드민 비밀번호를 복사해주세요.</li>
+</ul>
+<pre><code class="hljs language-bash">kubectl edit secret example-argocd-cluster
+</code></pre>
+<ul>
+<li>K8s 시크릿은 base64로 암호화되어 있으니 디코딩하려면 이 커맨드를 사용하세요.</li>
+</ul>
+<pre><code class="hljs language-bash"><span class="hljs-built_in">echo</span> &#x3C;인코딩된 비밀번호 입력>= | <span class="hljs-built_in">base64</span> -d
+</code></pre>
+<div class="content-ad"></div>
+<ul>
+<li>"admin" 사용자 이름과 이전 단계에서 가져온 비밀번호를 사용하여 Argo CD UI에 로그인하세요.</li>
+</ul>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_29.png" alt="image"></p>
+<h1>Argo CD로 배포하기</h1>
+<ul>
+<li>Argo CD UI에서 "Create Application"을 클릭하세요.</li>
+<li>애플리케이션에 필요한 정보를 입력하세요.</li>
+</ul>
+<div class="content-ad"></div>
+<p>애플리케이션 이름: 애플리케이션에 대한 설명적인 이름을 입력해주세요.</p>
+<p>프로젝트 이름: 애플리케이션이 속한 프로젝트를 지정해주세요.</p>
+<p>동기화: 자동 동기화를 위해 "자동"을 선택해주세요.</p>
+<p>저장소 URL: 애플리케이션 코드를 포함한 Git 저장소의 URL을 입력해주세요.</p>
+<div class="content-ad"></div>
+<p>Path: 레포지토리 내 배포 파일 경로를 지정합니다.</p>
+<p>Destination: 쿠버네티스 클러스터의 URL을 입력합니다 (예: <a href="https://kubernetes.default.svc" rel="nofollow" target="_blank">https://kubernetes.default.svc</a>).</p>
+<p>Namespace: 애플리케이션이 배포될 쿠버네티스 네임스페이스를 지정합니다.</p>
+<ul>
+<li>필요한 모든 정보를 제공한 후, "생성"을 클릭합니다.</li>
+<li>제공된 구성에 따라 Argo CD가 자동으로 쿠버네티스 클러스터에 애플리케이션을 생성합니다.</li>
+</ul>
+<div class="content-ad"></div>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_30.png" alt="이미지1"></p>
+<p><img src="/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_31.png" alt="이미지2"></p>
+<h1>결론</h1>
+<p>이 프로젝트는 GitHub, Maven, SonarQube, Docker, Jenkins, Argo CD, Helm, 그리고 Kubernetes를 CI/CD 파이프라인에 통합하여 소프트웨어 개발의 효율성과 신뢰성을 향상시킬 수 있다는 것을 효과적으로 시연하였습니다.</p>
+<div class="content-ad"></div>
+<p>저희는 프로세스를 개선하여 배송 속도를 높이고 소프트웨어 품질을 향상시켰습니다.</p>
+<p>앞으로도 파이프라인을 계속 개선하고 자동화를 강화하기 위해 새로운 도구를 탐색할 것입니다.</p>
+<p>감사의 말씀</p>
+<p>이 프로젝트는 우수한 데브옵스 컨텐츠로 유명한 Abhishek Veeramalla의 영감을 많이 받았습니다. 그의 컨텐츠가 나의 발전을 위한 견고한 기반이 되었습니다. 그의 컨텐츠는 여기에서 확인해보세요.</p>
+<div class="content-ad"></div>
+<h1>함께 소통해요</h1>
+<p>더 많은 정보와 향후 프로젝트에 대해 더 알고 싶다면, LinkedIn, GitHub, 그리고 Medium에서 저와 함께 소통해주세요. 🌏✈️🗺️</p>
+</body>
+</html>
+</div></article></div></main></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"post":{"title":"End-to-End CI CD 파이프라인 구현하는 방법","description":"","date":"2024-07-01 00:17","slug":"2024-07-01-End-to-EndCICDPipelineImplementation","content":"\n\n\n![이미지](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_0.png)\n\n# 소개\n\n현대 소프트웨어 개발에서는 지속적 통합과 지속적 배포(CI/CD)가 중요합니다. 이는 자동화된 코드 통합과 신뢰할 수 있는 애플리케이션 전달을 용이하게 합니다.\n\nJenkins는 유연성과 다양한 플러그인 옵션으로 유명하여, CI/CD 파이프라인을 만드는 데 선도하는 도구입니다.\n\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n이 블로그 포스트에서는 Jenkins를 사용한 CI/CD 파이프라인의 전체 설정을 안내합니다. 젠킨스 구성부터 버전 관리 시스템과 통합, 빌드, 테스트, 배포 오케스트레이션까지 모두 다룰 예정입니다. 소프트웨어 전달 프로세스를 개선하는 데 도움이 되도록 제작되었습니다.\n\n# 사용된 도구 및 기술\n\n이 안내서에서는 다음과 같은 다양한 기술과 도구를 활용할 예정입니다:\n\n- 버전 관리를 위한 GitHub\n- 프로젝트 관리 및 빌드를 위한 Maven\n- 코드 품질 분석을 위한 SonarQube\n- 컨테이너화를 위한 Docker\n- Continuous Integration을 위한 Jenkins\n- 쿠버네티스 배포 관리를 위한 ArgoCD 및 Helm\n- 컨테이너 오케스트레이션을 위한 쿠버네티스\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\nLinkedIn에서 연락할 것이 있으면 언제든지 연락해주세요.\n\n# Git 설정하기\n\n자바 애플리케이션의 Jenkins 파이프라인을 위한 기반을 설정하기 위해 Git을 구성하는 것부터 시작해보겠습니다:\n\n- 개인 Git 저장소 만들기: \n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n- 원하는 Git 호스팅 플랫폼(예: GitHub, GitLab)을 방문해주세요.\n- 계정에 로그인하거나 계정이 없다면 가입해주세요.\n- 새 저장소를 만들어주세요. 코드를 보호하기 위해 가시성을 비공개로 설정하는 것을 잊지 마세요.\n\n2. 개인 액세스 토큰 생성하기:\n\n- 계정 설정으로 이동해주세요. 프로필 아래나 드롭다운 메뉴에서 찾을 수 있습니다.\n- \"개발자 설정\" 또는 \"개인 액세스 토큰\" 라벨이 있는 섹션을 찾아주세요.\n- 새 토큰을 생성하고 'repo'와 같은 필요한 권한을 할당해주세요.\n- 이 토큰을 안전하게 복사하고 보관해주세요. Jenkins 파이프라인에서 액세스를 구성하는 데 나중에 필요할 것입니다.\n\n3. 저장소를 로컬로 복제하기:\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n- 여기서 소스 코드를 찾으세요.\n- Git Bash나 터미널을 열어주세요.\n- 저장소를 복제하고 싶은 디렉토리로 이동해주세요.\n- 다음 명령을 실행해주세요. `\u003cURL\u003e` 부분은 귀하의 저장소 URL로 교체해주세요:\n\n```js\ngit clone \u003cURL\u003e\n```\n\n![이미지](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_1.png)\n\n# EC2 인스턴스 생성하기\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n지금 우리는 테라폼을 사용하여 자동화할 수도 있지만, 이해를 돕기 위해 이 과정을 수동으로 진행하겠습니다.\n\n1. AWS 콘솔에 로그인합니다:\n    - AWS 관리 콘솔에 접속하세요.\n    - AWS 계정 자격 증명을 사용하여 로그인하세요. 계정이 없는 경우 새로 생성해야 합니다.\n\n2. EC2 대시보드로 이동합니다:\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n- 콘솔 상단에 있는 \"Services\" 메뉴를 찾아주세요.\n- \"Compute\" 섹션 아래에 있는 \"EC2\"를 클릭하여 EC2 대시보드로 이동해주세요.\n\n3. 인스턴스 시작:\n\n- \"인스턴스 시작\" 버튼을 클릭해주세요. 이로써 새로운 EC2 인스턴스를 생성하는 프로세스가 시작됩니다.\n\n4. 태그 추가:\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n5. 이미지 태그와 이름을 추가하여 인스턴스를 더 잘 정리하고 관리합니다.\n\n    - AMI 선택:\n\n    - 사전 구성된 서버 템플릿인 AMI 목록이 표시됩니다. 이것들은 다른 운영 체제와 설정을 포함할 수 있습니다.\n    \n    - 요구 사항에 맞는 AMI를 선택하십시오. 초보자에게는 Amazon Linux AMI나 기본 Ubuntu Server가 가장 쉬운 옵션이 될 수 있습니다.\n\n6. 인스턴스 유형 선택:\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n- 필요에 맞는 인스턴스 유형을 선택하세요.\n- 기본 옵션(일반적으로 t2.micro 인스턴스)은 테스트와 소규모 워크로드에 적합하며 무료 티어 대상입니다.\n- 저는 t2.large 인스턴스를 선택했는데, 2개의 vCPU와 8 GiB의 메모리를 제공하여 중간 규모의 워크로드를 처리하기에 적합합니다.\n- 이 인스턴스 유형을 활용하면 요금이 발생하니, 예산을 효과적으로 관리하기 위해 AWS의 최신 요금 정보를 확인하는 것이 중요합니다.\n\n7. 키페어 생성:\n\n- 키페어를 생성하거나 기존 것을 사용하세요. 이 키페어는 인스턴스에 대한 SSH 액세스에 중요합니다.\n- 개인 키 파일(.pem 파일)을 다운로드하고 안전한 곳에 보관하세요. 생성된 후에는 다시 다운로드할 수 없습니다.\n\n8. 인스턴스 세부정보 구성:\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n9. 보안 그룹 구성:\n\n- 보안 그룹은 인스턴스로부터 허용되는 및 송수신되는 트래픽을 제어하는 가상 방화벽 역할을 합니다.\n- 새로운 보안 그룹을 생성하거나 이미 있는 것을 선택할 수 있습니다. SSH (포트 22), 사용자 정의 TCP (8080) 및 사용자 정의 TCP (9000)와 같은 인바운드 포트를 열어두었는지 확인해주세요.\n\n10. 스토리지 추가:\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n- 루트 볼륨의 크기를 지정합니다 (일반적으로 기본 설정이 테스트 목적으로 적합합니다).\n\n11. 검토 및 시작:\n\n- 인스턴스 설정을 확인하세요. AMI 세부 정보, 인스턴스 유형, 보안 그룹 및 키페어를 확인합니다.\n- 계속하려면 \"시작\"을 클릭하세요.\n\n![이미지](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_2.png)\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n# 인스턴스에 액세스하기\n\n인스턴스가 시작되면 초기화하는 데 몇 분이 걸릴 것입니다.\n\n그런 다음 다운로드한 .pem 파일을 사용하여 SSH를 통해 인스턴스에 연결할 수 있습니다.\n\nWindows 기기에서 EC2 인스턴스에 SSH하기 위해 Mobaxterm을 사용하고 있습니다.\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n- MobaXterm을 다운로드하고 설치하세요.\n- 데스크톱이나 시작 메뉴에서 MobaXterm을 엽니다.\n- \"세션\" 버튼을 클릭한 후 \"SSH\"를 선택하세요.\n- 서버의 IP 주소 또는 호스트 이름을 입력하고 사용자 이름을 지정하세요.\n- \"고급 SSH 설정\"을 클릭한 후 \"개인 키 사용\"란을 체크하고 인스턴스에서 사용한 개인 키 쌍을 선택하세요.\n- \"확인\"을 클릭하여 연결하세요.\n\n![이미지](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_3.png)\n\n# Jenkins 설정하기\n\nJava 설치하기:\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n제단을 실행하기 전에 서버에 Java를 설치해야 합니다. Jenkins는 OpenJDK와 Oracle Java 둘 다 호환되지만, 일반적으로 OpenJDK에서 최적의 성능을 발휘합니다.\n\nSSH로 접속한 인스턴스에 Java를 설치하는 방법은 다음과 같습니다:\n\n```js\nsudo apt update\nsudo apt install openjdk-11-jdk\njava -version\n```\n\n제단을 설치하세요:\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n이제 서버에 Java가 설치되어 있고 준비가 되었으므로 다음 단계는 Jenkins를 설치하는 것입니다. 설치를 진행하는 두 가지 옵션이 있습니다: 스크립트 사용 또는 수동 명령 실행.\n\n스크립트 사용은 효율적이고 재현 가능하며 Jenkins를 여러 번 배포하거나 다른 환경에서 일관된 설정을 유지하려는 경우에 특히 좋습니다.\n\n- 'vim' 또는 원하는 기타 편집기를 사용하여 스크립트 파일을 생성합니다.\n\n```bash\nvim install_jenkins.sh\n```\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n- i키를 눌러 삽입 모드로 전환한 후 스크립트를 작성하세요.\n\n```bash\n#!/bin/bash\n# Jenkins GPG 키 다운로드\nsudo wget -O /usr/share/keyrings/jenkins-keyring.asc \\\n  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key\n\n# 패키지 관리자 소스에 Jenkins 저장소 추가\necho deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \\\n  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \\\n  /etc/apt/sources.list.d/jenkins.list \u003e /dev/null\n\n# 패키지 관리자 저장소 업데이트\nsudo apt-get update\n\n# Jenkins 설치\nsudo apt-get install jenkins -y\n```\n\n- :wq를 입력한 후 Enter를 눌러 변경 사항을 파일에 저장하고 에디터를 종료합니다.\n- 다음 명령을 사용하여 파일을 실행 가능하게 만드세요:\n\n```bash\nchmod +x install_jenkins.sh \n```\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n- 스크립트를 실행할 수 있게 되었으니, Jenkins를 설치하기 위해 스크립트를 실행할 차례입니다:\n\n```bash\n./install_jenkins.sh\n```\n\n방화벽 설정 조정:\n\n웹 브라우저를 통해 Jenkins에 접속할 수 있도록 하려면, 방화벽 설정을 제대로 구성하는 것이 중요합니다.\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n젠킨스는 기본적으로 8080 포트에서 실행됩니다. 따라서 보안 그룹 설정에서 이 포트로의 인바운드 트래픽을 허용해야 합니다.\n\n젠킨스 UI에 액세스하기:\n\n젠킨스 UI에 접속하려면 웹 브라우저를 열고 인스턴스의 IP 주소에 :8080 을 추가하여 입력하세요 (예: http://192.168.1.2:8080). 192.168.1.2를 실제 서버의 IP 주소로 대체하세요.\n\n초기 관리자 암호를 사용하여 젠킨스를 잠금 해제하세요. 암호는 다음 위치에서 찾을 수 있습니다:\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n```js\nsudo cat /var/lib/jenkins/secrets/initialAdminPassword\n```\n\n![이미지](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_4.png)\n\n추천 플러그인 설치하기:\n\n- Jenkins를 잠금 해제하면 추천 플러그인을 설치하거나 특정 플러그인을 수동으로 선택할 수 있는 옵션이 제공됩니다.\n- 대부분의 사용자들에게 권장되는 표준 플러그인 세트를 자동으로 설치하려면 '추천 플러그인 설치'를 클릭해주세요.\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n마스터 환경 변수\n\n- 마스터가 시작될 때 특정 환경 변수 설정이 필요한 경우 환경 변수를 추가할 수 있습니다.\n- 'Manage Jenkins'에서 'Configure System'에 들어가서 'Global properties' 섹션에서 'Environment variables'를 설정합니다.\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n제이킨스 설정 완료:\n\n- 제이킨스는 제이킨스 인스턴스의 URL을 구성하도록 요청할 것입니다.\n- 기본 URL(서버 IP 및 포트에 기반)이 자동으로 입력됩니다.\n- 설정을 완료하고 제이킨스 대시보드로 이동하려면 \"제이킨스 사용 시작\"을 클릭하세요.\n\n![이미지](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_7.png)\n\n필요한 플러그인 설치하기:\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n- Jenkins 대시보드 열기: Jenkins 인터페이스에 로그인하세요.\n- “관리 Jenkins \u003e 플러그인”으로 이동하세요.\n- 플러그인 설치: “docker pipeline” 및 “sonarqube scanner” 플러그인을 찾아 설치하고 필요한 경우 Jenkins를 재시작하세요.\n\n![이미지](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_8.png)\n\n![이미지](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_9.png)\n\n# 컴파일 작업\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n- Jenkins 메인 대시보드에서 \"새 항목\"을 클릭합니다.\n- 파이프라인의 이름을 지정하고 프로젝트 유형으로 '파이프라인'을 선택한 후 '확인'을 클릭합니다.\n\n![pipeline](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_10.png)\n\n파이프라인 구성:\n\n- 생성된 작업을 클릭하고 구성 화면에서 \"파이프라인\" 섹션으로 스크롤합니다.\n- \"파이프라인 스크립트\" 또는 \"SCM에서 파이프라인 스크립트\"를 선택합니다.\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n첫 번째 옵션은 Jenkins 인터페이스에서 Groovy 스크립트를 직접 작성하는 것이고, 두 번째 옵션은 스크립트를 Git과 같은 소스 코드 관리 시스템에서 가져오는 것입니다.\n\n- \"SCM에서 파이프라인 스크립트\": SCM 유형을 선택하세요 (예: Git).\n- Jenkinsfile이 포함된 저장소의 URL을 입력하세요.\n- 저장소가 비공개인 경우 자격 증명을 추가하세요.\n- 빌드할 브랜치를 지정하세요. 일반적으로 */main 또는 */master입니다.\n- Jenkinsfile이 서브디렉토리에 있거나 다르게 명명된 경우 경로를 지정하세요 (기본값은 Jenkinsfile).\n\n![이미지](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_11.png)\n\n![이미지](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_12.png)\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\nJenkins 재시작하기:\n\n- 구성 변경이나 업데이트를 효과적으로 적용하기 위해 Jenkins를 재시작하세요.\n- 이를 위해 Jenkins '대시보드'로 이동하고 사이드바에서 'Jenkins 관리'를 클릭하세요.\n- 거기서 \"디스크에서 구성 다시로드\" 또는 \"안전하게 재시작\"을 선택하세요.\n\n![Jenkins 재시작](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_13.png)\n\n# Sonarqube 서버 설정하기\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\nDocker 컨테이너로 SonarQube를 설치하는 것은 설정 프로세스를 간단히 하고 관리 및 확장을 쉽게 만드는 인기 있는 옵션입니다.\n\n설치 전 요구 사항: 서버에 Docker가 설치되어 있는지 확인해주세요. 만약 설치되어 있지 않다면 공식 Docker 웹사이트에서 Docker를 다운로드하고 설치할 수 있습니다.\n\nDocker 설치:\n\n- 'vim' 또는 사용하고자 하는 다른 편집기를 사용하여 스크립트 파일을 만들어주세요.\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n```js\ninstall_docker.sh\n```\n\n- 삽입 모드에 들어가기 위해 i를 누르세요. 그리고 스크립트를 작성하세요.\n\n```bash\n#!/bin/bash\n\n# 패키지 관리자 저장소 업데이트\nsudo apt-get update\n\n# 필요한 종속성 설치\nsudo apt-get install -y ca-certificates curl\n\n# Docker GPG 키를 위한 디렉토리 생성\nsudo install -m 0755 -d /etc/apt/keyrings\n\n# Docker의 GPG 키 다운로드\nsudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc\n\n# 키에 적절한 권한 부여\nsudo chmod a+r /etc/apt/keyrings/docker.asc\n\n# Docker 저장소를 Apt 소스에 추가\necho \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \\\n$(. /etc/os-release \u0026\u0026 echo \"$VERSION_CODENAME\") stable\" | \\\nsudo tee /etc/apt/sources.list.d/docker.list \u003e /dev/null\n\n# 패키지 관리자 저장소 업데이트\nsudo apt-get update\n\nsudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \n```\n\n- 정상 모드로 변경하시려면 Esc를 눌러서 normal 모드로 전환한 후 :wq를 입력한 후 Enter 키를 눌러주세요.\n- 파일을 실행 가능하게 만드는 명령어를 사용하세요.\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n```js\nchmod +x install_docker.sh\n```\n\n이제 스크립트가 실행 가능하니 Docker를 설치하려면 다음과 같이 실행하면 됩니다:\n\n```js\n./install_docker.sh\n```\n\nSonarqube 설치하라:\n\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n- 도커 허브에서 공식 SonarQube 도커 이미지를 가져옵시다:\n\n```js\ndocker pull sonarqube\n```\n\n- 다음 명령어를 사용하여 도커 컨테이너에서 SonarQube를 실행해보세요.\n\n```js\ndocker run -d --name sonarqube -p 9000:9000 sonarqube\n```\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\nSonarQube는 기본적으로 9000번 포트에서 작동합니다. SonarQube 대시보드에 원활하게 접속하기 위해 방화벽을 구성하여이 포트의 들어오는 트래픽을 허용하는 것이 중요합니다.\n\n브라우저에서 http://`your_instance_ip`:9000을 입력하여 SonarQube에 액세스하십시오. `your_instance_ip`를 서버의 IP 주소로 대체하십시오.\n\nSonarQube의 기본 로그인 자격 증명은 다음과 같습니다:\n\n- 사용자 이름: admin\n- 비밀번호: admin\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n하지만 보안상의 이유로 초기 설정 후에는 이러한 기본 자격 증명을 변경하는 것이 좋습니다.\n\n![image](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_14.png)\n\nJenkins와 통합하기:\n- Jenkins 플러그인을 위한 SonarQube Scanner를 설치합니다.\n- SonarQube 대시보드에 로그인합니다.\n- \"내 계정\"으로 이동하여 \"보안\"을 클릭하고 \"토큰 생성\"을 클릭합니다.\n- 토큰에 이름을 지정하고 \"생성\"을 클릭합니다.\n- 생성된 토큰을 복사합니다.\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n![이미지](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_15.png)\n\n![이미지](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_16.png)\n\nJenkins에 SonarQube 토큰을 자격 인증으로 추가하는 방법:\n\n- Jenkins에서 “Jenkins 관리” \u003e “자격 증명” \u003e “시스템” \u003e “전역 자격 증명”(또는 프로젝트 자격 증명으로 이동).\n- “자격 증명 추가”를 클릭합니다.\n- 자격 증명의 종류로 “비밀 텍스트”를 선택합니다.\n- SonarQube 인증 토큰을 “비밀” 필드에 붙여 넣습니다.\n- 자격 증명의 ID와 설명을 선택적으로 제공합니다.\n- 자격 증명을 저장하려면 “생성”을 클릭합니다.\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n이미지태그를 Markdown 형식으로 바꿔줍시다.\n\n![이미지 이름](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_17.png)\n\n![이미지 이름](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_18.png)\n\nJenkins SonarQube Scanner 설정:\n\n- Jenkins 작업 구성에서 SonarQube 분석 섹션 또는 해당 섹션 이름을 찾아보세요.\n- SonarQube 서버 URL을 제공합니다(e.g.,http://`your_instance_ip`:9000, `your_instance_ip`을 서버의 IP 주소로 대체하세요).\n- 이전에 추가한 SonarQube 토큰을 인증 토큰으로 사용하세요.\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n# 자격증\n\nCI/CD 파이프라인에 필요한 모든 자격증이 올바르게 구성되어 있는지 확인하세요.\n\nSonarQube 인증, Docker Hub 접근 및 Git 저장소 인증을 위한 자격증이 포함됩니다.\n\n![이미지](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_19.png)\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n# Jenkinsfile\n\nJenkinsfile은 Jenkins 파이프라인의 구성을 정의하는 텍스트 파일입니다. 이는 Java 플랫폼을 위한 스크립팅 언어 인 Groovy로 작성됩니다.\n\nJenkinsfile은 파이프라인 작업을 실행할 때 Jenkins가 실행해야하는 단계, 스테이지 및 작업을 지정합니다.\n\nJenkins 파일의 일부는 자격 증명 및 세부 정보로 교체해야 할 부분이 있으니 주의해야 합니다.\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\nPipeline Stages:\n\nStage 1: Git에서 소스 코드를 확인합니다.\n\nStage 2: Maven을 사용하여 Java 애플리케이션을 빌드합니다.\n\nStage 3: JUnit과 Mockito를 사용하여 단위 테스트를 실행합니다.\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n## Stage 4: 코드 품질을 확인하기 위해 SonarQube 분석 실행\n\n## Stage 5: 어플리케이션을 JAR 파일로 패키징\n\n## Stage 6: Helm을 사용하여 어플리케이션을 테스트 환경에 배포\n\n## Stage 7: 배포된 어플리케이션에서 사용자 수락 테스트 실행\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n**Stage 8: Helm을 사용하여 애플리케이션을 프로덕션 환경으로 프로모션하기**\n\n```js\n파이프라인 {\n  에이전트 {\n    도커 {\n      이미지 'abhishekf5/maven-abhishek-docker-agent:v1'\n      args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // 호스트의 도커 데몬에 액세스하기 위해 도커 소켓을 마운트\n    }\n  }\n  stages {\n    stage('Checkout') {\n      steps {\n        sh 'echo passed'\n        //git branch: 'main', url: 'https://github.com/wangoimwangi/jenkins-CICD.git'\n      }\n    }\n    stage('Build and Test') {\n      steps {\n        sh 'ls -ltr'\n        // 프로젝트 빌드하고 JAR 파일 생성\n        sh 'cd spring-boot-app \u0026\u0026 mvn clean package'\n      }\n    }\n    stage('정적 코드 분석') {\n      environment {\n        SONAR_URL = \"http://54.252.140.131:9000\"\n      }\n      steps {\n        withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {\n          sh 'cd spring-boot-app \u0026\u0026 mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'\n        }\n      }\n    }\n    stage('Docker 이미지 빌드 및 푸시') {\n      environment {\n        DOCKER_IMAGE = \"ultimate-cicd:${BUILD_NUMBER}\"\n        // DOCKERFILE_LOCATION = \"spring-boot-app/Dockerfile\"\n        REGISTRY_CREDENTIALS = credentials('docker-cred')\n      }\n      steps {\n        script {\n            sh 'cd spring-boot-app \u0026\u0026 docker build -t ${DOCKER_IMAGE} .'\n            def dockerImage = docker.image(\"${DOCKER_IMAGE}\")\n            docker.withRegistry('https://index.docker.io/v1/', \"docker-cred\") {\n                dockerImage.push()\n            }\n        }\n      }\n    }\n    stage('배포 파일 업데이트') {\n        environment {\n            GIT_REPO_NAME = \"jenkins-CICD\"\n            GIT_USER_NAME = \"wangoimwangi\"\n        }\n        steps {\n            withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {\n                sh '''\n                    git config user.email \"mariakoi800@gmail.com\"\n                    git config user.name \"Maria\"\n                    BUILD_NUMBER=${BUILD_NUMBER}\n                    sed -i \"s/replaceImageTag/${BUILD_NUMBER}/g\" spring-boot-app-manifests/deployment.yml\n                    git add spring-boot-app-manifests/deployment.yml\n                    git commit -m \"Update deployment image to version ${BUILD_NUMBER}\"\n                    git push @github.com/${GIT_USER_NAME}/${GIT_REPO_NAME\"\u003ehttps://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main\n                '''\n            }\n        }\n    }\n  }\n}\n```\n\n- \"지금 빌드\"를 클릭하여 파이프라인 작업을 트리거합니다.\n- Jenkins는 귀하의 저장소에서 Jenkinsfile을 가져와 정의된대로 실행합니다.\n- Jenkins 대시보드에서 파이프라인 작업 진행 상황을 확인할 수 있습니다.\n- 각 파이프라인 단계가 실행될 때마다 자세한 로그와 상태 업데이트를 보려면 작업을 클릭하십시오.\n- 파이프라인 실행 중 문제가 발생하면 Jenkinsfile 및 작업 구성을 검토하여 오류를 확인하십시오.\n- 문제가 발생했을 경우 콘솔 출력과 로그를 확인하여 실패에 대한 자세한 내용을 확인하십시오.\n\n![End-to-End CI/CD 파이프라인 구현](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_20.png)\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\nSonarQube는 파이프라인 실행 보고서를 포함하게 됩니다.\n\n![Pipeline Report](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_21.png)\n\n# ArgoCD 설정\n\nArgoCD는 CI/CD 파이프라인의 지속적 배포 세그먼트를 관리하며, Kubernetes로의 배포를 자동화합니다.\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n로컬 배포는 Minikube를 사용하거나 Amazon EKS를 활용한 클라우드 배포를 선택할 수 있어요. \n\n준비물:\n- Minikube에서 필요로 하는 가상화를 위해 Windows 컴퓨터에 VirtualBox 또는 Hyper-V가 설치되어 있는지 확인해주세요.\n\nMinikube 설치하는 방법은 다음과 같아요:\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n- Minikube을 다운로드하고 설치하세요. 각 OS에 맞는 설명은 Minikube 공식 문서를 참고해주세요.\n- 로컬 Kubernetes 클러스터를 시작하세요.\n\n```bash\nminikube start\n```\n\nKubectl 설치 방법:\n\n- 공식 Kubernetes 릴리스 페이지에서 최신 버전의 kubectl을 다운로드하세요.\n- kubectl을 PATH에 추가하여 명령 프롬프트에서 어디서든 실행할 수 있도록 해주세요.\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n# ArgoCD 오퍼레이터 설치하기\n\n쿠버네티스에 Argo CD를 설치하려면 Argo CD 오퍼레이터를 사용할 수 있습니다. 이 오퍼레이터는 Argo CD 인스턴스의 배포와 관리를 자동화합니다.\n\n- [공식 Operator Hub 페이지](https://operatorhub.io)로 이동합니다.\n- Operator Hub 웹사이트의 검색 바를 사용하여 \"Argo CD\"를 검색하고 \"설치\"를 클릭합니다.\n- 다음 명령어를 실행하세요:\n\n```shell\n# Operator Lifecycle Manager (OLM)을 설치합니다. OLM은 클러스터에서 실행 중인 Operator를 관리하는 데 도움이 되는 도구입니다.\n\n$ curl -sL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.27.0/install.sh | bash -s v0.27.0\n```\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n```shell\n# AgroCD Operator 설치하기\nkubectl create -f https://operatorhub.io/install/argocd-operator.yaml\n```\n\n- 이 Operator는 “operators” 네임스페이스에 설치되며, 클러스터의 모든 네임스페이스에서 사용할 수 있습니다.\n\n```shell\n# Operator 구동 상태 확인하기\n$ kubectl get csv -n operators\n```\n\n![이미지](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_22.png)\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n\n![이미지](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_23.png)\n\n# ArgoCD 컨트롤러 설정하기\n\n- OperatorHub.io로 이동합니다.\n- \"Argo CD\" Operator에서 \"Operator Documentation\"으로 스크롤합니다.\n- \"Usage\"를 클릭한 후 \"Basics\"를 클릭합니다.\n- 제공된 YAML 구성을 복사합니다. 이 YAML은 Kubernetes 클러스터에 Argo CD를 배포하는 데 사용됩니다.\n\n![이미지](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_24.png)\n\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n![image](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_25.png)\n\n- Argo CD 인스턴스를 정의하는 다음 내용을 포함하여 vim argocd-basic.yml이라는 새 파일을 생성하세요:\n\n```js\napiVersion: argoproj.io/v1alpha1\nkind: ArgoCD\nmetadata:\n  name: example-argocd\n  labels:\n    example: basic\nspec: {}\n```\n\n- 구성을 적용하세요.\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n```bash\nkubectl apply -f argocd-basic.yml\n```\n\n![ArgoCD UI](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_26.png)\n\n# ArgoCD UI 설정\n\n- 브라우저를 통해 Argo CD 서버 UI에 접속하려면 서비스 유형을 'ClusterIP'에서 'NodePort'로 변경해야 합니다.\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n```js\r\nkubectl get svc\r\n```\n\n- Minikube를 통해 브라우저를 통해 Argo CD 서버에 직접 액세스할 수 있는 URL을 생성할 수 있습니다.\n\n```js\nminikube service argocd-server --url\n```\n\n![2024-07-01-End-to-EndCICDPipelineImplementation_27.png](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_27.png)\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n- 이전 명령어에서 표시된 URL을 복사해서 브라우저에 붙여넣어 Argo CD UI에 액세스하세요.\n\n![Argo CD UI](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_28.png)\n\n- 기본 사용자 이름은 'admin'입니다. 관리자 암호를 얻으려면 Kubernetes 시크릿에서 추출해야 합니다:\n\n```js\nkubectl get secret\n```\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n- \"example-argocd-cluster\" 시크릿을 편집하고 어드민 비밀번호를 복사해주세요.\n\n```bash\nkubectl edit secret example-argocd-cluster\n```\n\n- K8s 시크릿은 base64로 암호화되어 있으니 디코딩하려면 이 커맨드를 사용하세요.\n\n```bash\necho \u003c인코딩된 비밀번호 입력\u003e= | base64 -d\n```\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n- \"admin\" 사용자 이름과 이전 단계에서 가져온 비밀번호를 사용하여 Argo CD UI에 로그인하세요.\n\n![image](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_29.png)\n\n# Argo CD로 배포하기\n\n- Argo CD UI에서 \"Create Application\"을 클릭하세요.\n- 애플리케이션에 필요한 정보를 입력하세요.\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n애플리케이션 이름: 애플리케이션에 대한 설명적인 이름을 입력해주세요.\n\n프로젝트 이름: 애플리케이션이 속한 프로젝트를 지정해주세요.\n\n동기화: 자동 동기화를 위해 \"자동\"을 선택해주세요.\n\n저장소 URL: 애플리케이션 코드를 포함한 Git 저장소의 URL을 입력해주세요.\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\nPath: 레포지토리 내 배포 파일 경로를 지정합니다.\n\nDestination: 쿠버네티스 클러스터의 URL을 입력합니다 (예: https://kubernetes.default.svc).\n\nNamespace: 애플리케이션이 배포될 쿠버네티스 네임스페이스를 지정합니다.\n\n- 필요한 모든 정보를 제공한 후, \"생성\"을 클릭합니다.\n- 제공된 구성에 따라 Argo CD가 자동으로 쿠버네티스 클러스터에 애플리케이션을 생성합니다.\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n![이미지1](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_30.png)\n\n![이미지2](/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_31.png)\n\n# 결론\n\n이 프로젝트는 GitHub, Maven, SonarQube, Docker, Jenkins, Argo CD, Helm, 그리고 Kubernetes를 CI/CD 파이프라인에 통합하여 소프트웨어 개발의 효율성과 신뢰성을 향상시킬 수 있다는 것을 효과적으로 시연하였습니다.\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n저희는 프로세스를 개선하여 배송 속도를 높이고 소프트웨어 품질을 향상시켰습니다.\n\n앞으로도 파이프라인을 계속 개선하고 자동화를 강화하기 위해 새로운 도구를 탐색할 것입니다.\n\n감사의 말씀\n\n이 프로젝트는 우수한 데브옵스 컨텐츠로 유명한 Abhishek Veeramalla의 영감을 많이 받았습니다. 그의 컨텐츠가 나의 발전을 위한 견고한 기반이 되었습니다. 그의 컨텐츠는 여기에서 확인해보세요.\n\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\n# 함께 소통해요\n\n더 많은 정보와 향후 프로젝트에 대해 더 알고 싶다면, LinkedIn, GitHub, 그리고 Medium에서 저와 함께 소통해주세요. 🌏✈️🗺️","ogImage":{"url":"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_0.png"},"coverImage":"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_0.png","tag":["Tech"],"readingTime":20},"content":"\u003c!doctype html\u003e\n\u003chtml lang=\"en\"\u003e\n\u003chead\u003e\n\u003cmeta charset=\"utf-8\"\u003e\n\u003cmeta content=\"width=device-width, initial-scale=1\" name=\"viewport\"\u003e\n\u003c/head\u003e\n\u003cbody\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_0.png\" alt=\"이미지\"\u003e\u003c/p\u003e\n\u003ch1\u003e소개\u003c/h1\u003e\n\u003cp\u003e현대 소프트웨어 개발에서는 지속적 통합과 지속적 배포(CI/CD)가 중요합니다. 이는 자동화된 코드 통합과 신뢰할 수 있는 애플리케이션 전달을 용이하게 합니다.\u003c/p\u003e\n\u003cp\u003eJenkins는 유연성과 다양한 플러그인 옵션으로 유명하여, CI/CD 파이프라인을 만드는 데 선도하는 도구입니다.\u003c/p\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003e이 블로그 포스트에서는 Jenkins를 사용한 CI/CD 파이프라인의 전체 설정을 안내합니다. 젠킨스 구성부터 버전 관리 시스템과 통합, 빌드, 테스트, 배포 오케스트레이션까지 모두 다룰 예정입니다. 소프트웨어 전달 프로세스를 개선하는 데 도움이 되도록 제작되었습니다.\u003c/p\u003e\n\u003ch1\u003e사용된 도구 및 기술\u003c/h1\u003e\n\u003cp\u003e이 안내서에서는 다음과 같은 다양한 기술과 도구를 활용할 예정입니다:\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003e버전 관리를 위한 GitHub\u003c/li\u003e\n\u003cli\u003e프로젝트 관리 및 빌드를 위한 Maven\u003c/li\u003e\n\u003cli\u003e코드 품질 분석을 위한 SonarQube\u003c/li\u003e\n\u003cli\u003e컨테이너화를 위한 Docker\u003c/li\u003e\n\u003cli\u003eContinuous Integration을 위한 Jenkins\u003c/li\u003e\n\u003cli\u003e쿠버네티스 배포 관리를 위한 ArgoCD 및 Helm\u003c/li\u003e\n\u003cli\u003e컨테이너 오케스트레이션을 위한 쿠버네티스\u003c/li\u003e\n\u003c/ul\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003eLinkedIn에서 연락할 것이 있으면 언제든지 연락해주세요.\u003c/p\u003e\n\u003ch1\u003eGit 설정하기\u003c/h1\u003e\n\u003cp\u003e자바 애플리케이션의 Jenkins 파이프라인을 위한 기반을 설정하기 위해 Git을 구성하는 것부터 시작해보겠습니다:\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003e개인 Git 저장소 만들기:\u003c/li\u003e\n\u003c/ul\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cul\u003e\n\u003cli\u003e원하는 Git 호스팅 플랫폼(예: GitHub, GitLab)을 방문해주세요.\u003c/li\u003e\n\u003cli\u003e계정에 로그인하거나 계정이 없다면 가입해주세요.\u003c/li\u003e\n\u003cli\u003e새 저장소를 만들어주세요. 코드를 보호하기 위해 가시성을 비공개로 설정하는 것을 잊지 마세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003col start=\"2\"\u003e\n\u003cli\u003e개인 액세스 토큰 생성하기:\u003c/li\u003e\n\u003c/ol\u003e\n\u003cul\u003e\n\u003cli\u003e계정 설정으로 이동해주세요. 프로필 아래나 드롭다운 메뉴에서 찾을 수 있습니다.\u003c/li\u003e\n\u003cli\u003e\"개발자 설정\" 또는 \"개인 액세스 토큰\" 라벨이 있는 섹션을 찾아주세요.\u003c/li\u003e\n\u003cli\u003e새 토큰을 생성하고 'repo'와 같은 필요한 권한을 할당해주세요.\u003c/li\u003e\n\u003cli\u003e이 토큰을 안전하게 복사하고 보관해주세요. Jenkins 파이프라인에서 액세스를 구성하는 데 나중에 필요할 것입니다.\u003c/li\u003e\n\u003c/ul\u003e\n\u003col start=\"3\"\u003e\n\u003cli\u003e저장소를 로컬로 복제하기:\u003c/li\u003e\n\u003c/ol\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cul\u003e\n\u003cli\u003e여기서 소스 코드를 찾으세요.\u003c/li\u003e\n\u003cli\u003eGit Bash나 터미널을 열어주세요.\u003c/li\u003e\n\u003cli\u003e저장소를 복제하고 싶은 디렉토리로 이동해주세요.\u003c/li\u003e\n\u003cli\u003e다음 명령을 실행해주세요. \u003ccode\u003e\u0026#x3C;URL\u003e\u003c/code\u003e 부분은 귀하의 저장소 URL로 교체해주세요:\u003c/li\u003e\n\u003c/ul\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-js\"\u003egit clone \u0026#x3C;\u003cspan class=\"hljs-variable constant_\"\u003eURL\u003c/span\u003e\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_1.png\" alt=\"이미지\"\u003e\u003c/p\u003e\n\u003ch1\u003eEC2 인스턴스 생성하기\u003c/h1\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003e지금 우리는 테라폼을 사용하여 자동화할 수도 있지만, 이해를 돕기 위해 이 과정을 수동으로 진행하겠습니다.\u003c/p\u003e\n\u003col\u003e\n\u003cli\u003e\n\u003cp\u003eAWS 콘솔에 로그인합니다:\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003eAWS 관리 콘솔에 접속하세요.\u003c/li\u003e\n\u003cli\u003eAWS 계정 자격 증명을 사용하여 로그인하세요. 계정이 없는 경우 새로 생성해야 합니다.\u003c/li\u003e\n\u003c/ul\u003e\n\u003c/li\u003e\n\u003cli\u003e\n\u003cp\u003eEC2 대시보드로 이동합니다:\u003c/p\u003e\n\u003c/li\u003e\n\u003c/ol\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cul\u003e\n\u003cli\u003e콘솔 상단에 있는 \"Services\" 메뉴를 찾아주세요.\u003c/li\u003e\n\u003cli\u003e\"Compute\" 섹션 아래에 있는 \"EC2\"를 클릭하여 EC2 대시보드로 이동해주세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003col start=\"3\"\u003e\n\u003cli\u003e인스턴스 시작:\u003c/li\u003e\n\u003c/ol\u003e\n\u003cul\u003e\n\u003cli\u003e\"인스턴스 시작\" 버튼을 클릭해주세요. 이로써 새로운 EC2 인스턴스를 생성하는 프로세스가 시작됩니다.\u003c/li\u003e\n\u003c/ul\u003e\n\u003col start=\"4\"\u003e\n\u003cli\u003e태그 추가:\u003c/li\u003e\n\u003c/ol\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003col start=\"5\"\u003e\n\u003cli\u003e\n\u003cp\u003e이미지 태그와 이름을 추가하여 인스턴스를 더 잘 정리하고 관리합니다.\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003e\n\u003cp\u003eAMI 선택:\u003c/p\u003e\n\u003c/li\u003e\n\u003cli\u003e\n\u003cp\u003e사전 구성된 서버 템플릿인 AMI 목록이 표시됩니다. 이것들은 다른 운영 체제와 설정을 포함할 수 있습니다.\u003c/p\u003e\n\u003c/li\u003e\n\u003cli\u003e\n\u003cp\u003e요구 사항에 맞는 AMI를 선택하십시오. 초보자에게는 Amazon Linux AMI나 기본 Ubuntu Server가 가장 쉬운 옵션이 될 수 있습니다.\u003c/p\u003e\n\u003c/li\u003e\n\u003c/ul\u003e\n\u003c/li\u003e\n\u003cli\u003e\n\u003cp\u003e인스턴스 유형 선택:\u003c/p\u003e\n\u003c/li\u003e\n\u003c/ol\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cul\u003e\n\u003cli\u003e필요에 맞는 인스턴스 유형을 선택하세요.\u003c/li\u003e\n\u003cli\u003e기본 옵션(일반적으로 t2.micro 인스턴스)은 테스트와 소규모 워크로드에 적합하며 무료 티어 대상입니다.\u003c/li\u003e\n\u003cli\u003e저는 t2.large 인스턴스를 선택했는데, 2개의 vCPU와 8 GiB의 메모리를 제공하여 중간 규모의 워크로드를 처리하기에 적합합니다.\u003c/li\u003e\n\u003cli\u003e이 인스턴스 유형을 활용하면 요금이 발생하니, 예산을 효과적으로 관리하기 위해 AWS의 최신 요금 정보를 확인하는 것이 중요합니다.\u003c/li\u003e\n\u003c/ul\u003e\n\u003col start=\"7\"\u003e\n\u003cli\u003e키페어 생성:\u003c/li\u003e\n\u003c/ol\u003e\n\u003cul\u003e\n\u003cli\u003e키페어를 생성하거나 기존 것을 사용하세요. 이 키페어는 인스턴스에 대한 SSH 액세스에 중요합니다.\u003c/li\u003e\n\u003cli\u003e개인 키 파일(.pem 파일)을 다운로드하고 안전한 곳에 보관하세요. 생성된 후에는 다시 다운로드할 수 없습니다.\u003c/li\u003e\n\u003c/ul\u003e\n\u003col start=\"8\"\u003e\n\u003cli\u003e인스턴스 세부정보 구성:\u003c/li\u003e\n\u003c/ol\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003col start=\"9\"\u003e\n\u003cli\u003e보안 그룹 구성:\u003c/li\u003e\n\u003c/ol\u003e\n\u003cul\u003e\n\u003cli\u003e보안 그룹은 인스턴스로부터 허용되는 및 송수신되는 트래픽을 제어하는 가상 방화벽 역할을 합니다.\u003c/li\u003e\n\u003cli\u003e새로운 보안 그룹을 생성하거나 이미 있는 것을 선택할 수 있습니다. SSH (포트 22), 사용자 정의 TCP (8080) 및 사용자 정의 TCP (9000)와 같은 인바운드 포트를 열어두었는지 확인해주세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003col start=\"10\"\u003e\n\u003cli\u003e스토리지 추가:\u003c/li\u003e\n\u003c/ol\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cul\u003e\n\u003cli\u003e루트 볼륨의 크기를 지정합니다 (일반적으로 기본 설정이 테스트 목적으로 적합합니다).\u003c/li\u003e\n\u003c/ul\u003e\n\u003col start=\"11\"\u003e\n\u003cli\u003e검토 및 시작:\u003c/li\u003e\n\u003c/ol\u003e\n\u003cul\u003e\n\u003cli\u003e인스턴스 설정을 확인하세요. AMI 세부 정보, 인스턴스 유형, 보안 그룹 및 키페어를 확인합니다.\u003c/li\u003e\n\u003cli\u003e계속하려면 \"시작\"을 클릭하세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_2.png\" alt=\"이미지\"\u003e\u003c/p\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003ch1\u003e인스턴스에 액세스하기\u003c/h1\u003e\n\u003cp\u003e인스턴스가 시작되면 초기화하는 데 몇 분이 걸릴 것입니다.\u003c/p\u003e\n\u003cp\u003e그런 다음 다운로드한 .pem 파일을 사용하여 SSH를 통해 인스턴스에 연결할 수 있습니다.\u003c/p\u003e\n\u003cp\u003eWindows 기기에서 EC2 인스턴스에 SSH하기 위해 Mobaxterm을 사용하고 있습니다.\u003c/p\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cul\u003e\n\u003cli\u003eMobaXterm을 다운로드하고 설치하세요.\u003c/li\u003e\n\u003cli\u003e데스크톱이나 시작 메뉴에서 MobaXterm을 엽니다.\u003c/li\u003e\n\u003cli\u003e\"세션\" 버튼을 클릭한 후 \"SSH\"를 선택하세요.\u003c/li\u003e\n\u003cli\u003e서버의 IP 주소 또는 호스트 이름을 입력하고 사용자 이름을 지정하세요.\u003c/li\u003e\n\u003cli\u003e\"고급 SSH 설정\"을 클릭한 후 \"개인 키 사용\"란을 체크하고 인스턴스에서 사용한 개인 키 쌍을 선택하세요.\u003c/li\u003e\n\u003cli\u003e\"확인\"을 클릭하여 연결하세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_3.png\" alt=\"이미지\"\u003e\u003c/p\u003e\n\u003ch1\u003eJenkins 설정하기\u003c/h1\u003e\n\u003cp\u003eJava 설치하기:\u003c/p\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003e제단을 실행하기 전에 서버에 Java를 설치해야 합니다. Jenkins는 OpenJDK와 Oracle Java 둘 다 호환되지만, 일반적으로 OpenJDK에서 최적의 성능을 발휘합니다.\u003c/p\u003e\n\u003cp\u003eSSH로 접속한 인스턴스에 Java를 설치하는 방법은 다음과 같습니다:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-js\"\u003esudo apt update\nsudo apt install openjdk-\u003cspan class=\"hljs-number\"\u003e11\u003c/span\u003e-jdk\njava -version\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e제단을 설치하세요:\u003c/p\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003e이제 서버에 Java가 설치되어 있고 준비가 되었으므로 다음 단계는 Jenkins를 설치하는 것입니다. 설치를 진행하는 두 가지 옵션이 있습니다: 스크립트 사용 또는 수동 명령 실행.\u003c/p\u003e\n\u003cp\u003e스크립트 사용은 효율적이고 재현 가능하며 Jenkins를 여러 번 배포하거나 다른 환경에서 일관된 설정을 유지하려는 경우에 특히 좋습니다.\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003e'vim' 또는 원하는 기타 편집기를 사용하여 스크립트 파일을 생성합니다.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003evim install_jenkins.sh\n\u003c/code\u003e\u003c/pre\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cul\u003e\n\u003cli\u003ei키를 눌러 삽입 모드로 전환한 후 스크립트를 작성하세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003e\u003cspan class=\"hljs-meta\"\u003e#!/bin/bash\u003c/span\u003e\n\u003cspan class=\"hljs-comment\"\u003e# Jenkins GPG 키 다운로드\u003c/span\u003e\nsudo wget -O /usr/share/keyrings/jenkins-keyring.asc \\\n  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key\n\n\u003cspan class=\"hljs-comment\"\u003e# 패키지 관리자 소스에 Jenkins 저장소 추가\u003c/span\u003e\n\u003cspan class=\"hljs-built_in\"\u003eecho\u003c/span\u003e deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \\\n  https://pkg.jenkins.io/debian-stable binary/ | sudo \u003cspan class=\"hljs-built_in\"\u003etee\u003c/span\u003e \\\n  /etc/apt/sources.list.d/jenkins.list \u003e /dev/null\n\n\u003cspan class=\"hljs-comment\"\u003e# 패키지 관리자 저장소 업데이트\u003c/span\u003e\nsudo apt-get update\n\n\u003cspan class=\"hljs-comment\"\u003e# Jenkins 설치\u003c/span\u003e\nsudo apt-get install jenkins -y\n\u003c/code\u003e\u003c/pre\u003e\n\u003cul\u003e\n\u003cli\u003e:wq를 입력한 후 Enter를 눌러 변경 사항을 파일에 저장하고 에디터를 종료합니다.\u003c/li\u003e\n\u003cli\u003e다음 명령을 사용하여 파일을 실행 가능하게 만드세요:\u003c/li\u003e\n\u003c/ul\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003e\u003cspan class=\"hljs-built_in\"\u003echmod\u003c/span\u003e +x install_jenkins.sh \n\u003c/code\u003e\u003c/pre\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cul\u003e\n\u003cli\u003e스크립트를 실행할 수 있게 되었으니, Jenkins를 설치하기 위해 스크립트를 실행할 차례입니다:\u003c/li\u003e\n\u003c/ul\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003e./install_jenkins.sh\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e방화벽 설정 조정:\u003c/p\u003e\n\u003cp\u003e웹 브라우저를 통해 Jenkins에 접속할 수 있도록 하려면, 방화벽 설정을 제대로 구성하는 것이 중요합니다.\u003c/p\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003e젠킨스는 기본적으로 8080 포트에서 실행됩니다. 따라서 보안 그룹 설정에서 이 포트로의 인바운드 트래픽을 허용해야 합니다.\u003c/p\u003e\n\u003cp\u003e젠킨스 UI에 액세스하기:\u003c/p\u003e\n\u003cp\u003e젠킨스 UI에 접속하려면 웹 브라우저를 열고 인스턴스의 IP 주소에 :8080 을 추가하여 입력하세요 (예: \u003ca href=\"http://192.168.1.2:8080\" rel=\"nofollow\" target=\"_blank\"\u003ehttp://192.168.1.2:8080\u003c/a\u003e). 192.168.1.2를 실제 서버의 IP 주소로 대체하세요.\u003c/p\u003e\n\u003cp\u003e초기 관리자 암호를 사용하여 젠킨스를 잠금 해제하세요. 암호는 다음 위치에서 찾을 수 있습니다:\u003c/p\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-js\"\u003esudo cat /\u003cspan class=\"hljs-keyword\"\u003evar\u003c/span\u003e/lib/jenkins/secrets/initialAdminPassword\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_4.png\" alt=\"이미지\"\u003e\u003c/p\u003e\n\u003cp\u003e추천 플러그인 설치하기:\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003eJenkins를 잠금 해제하면 추천 플러그인을 설치하거나 특정 플러그인을 수동으로 선택할 수 있는 옵션이 제공됩니다.\u003c/li\u003e\n\u003cli\u003e대부분의 사용자들에게 권장되는 표준 플러그인 세트를 자동으로 설치하려면 '추천 플러그인 설치'를 클릭해주세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003e마스터 환경 변수\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003e마스터가 시작될 때 특정 환경 변수 설정이 필요한 경우 환경 변수를 추가할 수 있습니다.\u003c/li\u003e\n\u003cli\u003e'Manage Jenkins'에서 'Configure System'에 들어가서 'Global properties' 섹션에서 'Environment variables'를 설정합니다.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003e제이킨스 설정 완료:\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003e제이킨스는 제이킨스 인스턴스의 URL을 구성하도록 요청할 것입니다.\u003c/li\u003e\n\u003cli\u003e기본 URL(서버 IP 및 포트에 기반)이 자동으로 입력됩니다.\u003c/li\u003e\n\u003cli\u003e설정을 완료하고 제이킨스 대시보드로 이동하려면 \"제이킨스 사용 시작\"을 클릭하세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_7.png\" alt=\"이미지\"\u003e\u003c/p\u003e\n\u003cp\u003e필요한 플러그인 설치하기:\u003c/p\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cul\u003e\n\u003cli\u003eJenkins 대시보드 열기: Jenkins 인터페이스에 로그인하세요.\u003c/li\u003e\n\u003cli\u003e“관리 Jenkins \u003e 플러그인”으로 이동하세요.\u003c/li\u003e\n\u003cli\u003e플러그인 설치: “docker pipeline” 및 “sonarqube scanner” 플러그인을 찾아 설치하고 필요한 경우 Jenkins를 재시작하세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_8.png\" alt=\"이미지\"\u003e\u003c/p\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_9.png\" alt=\"이미지\"\u003e\u003c/p\u003e\n\u003ch1\u003e컴파일 작업\u003c/h1\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cul\u003e\n\u003cli\u003eJenkins 메인 대시보드에서 \"새 항목\"을 클릭합니다.\u003c/li\u003e\n\u003cli\u003e파이프라인의 이름을 지정하고 프로젝트 유형으로 '파이프라인'을 선택한 후 '확인'을 클릭합니다.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_10.png\" alt=\"pipeline\"\u003e\u003c/p\u003e\n\u003cp\u003e파이프라인 구성:\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003e생성된 작업을 클릭하고 구성 화면에서 \"파이프라인\" 섹션으로 스크롤합니다.\u003c/li\u003e\n\u003cli\u003e\"파이프라인 스크립트\" 또는 \"SCM에서 파이프라인 스크립트\"를 선택합니다.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003e첫 번째 옵션은 Jenkins 인터페이스에서 Groovy 스크립트를 직접 작성하는 것이고, 두 번째 옵션은 스크립트를 Git과 같은 소스 코드 관리 시스템에서 가져오는 것입니다.\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003e\"SCM에서 파이프라인 스크립트\": SCM 유형을 선택하세요 (예: Git).\u003c/li\u003e\n\u003cli\u003eJenkinsfile이 포함된 저장소의 URL을 입력하세요.\u003c/li\u003e\n\u003cli\u003e저장소가 비공개인 경우 자격 증명을 추가하세요.\u003c/li\u003e\n\u003cli\u003e빌드할 브랜치를 지정하세요. 일반적으로 */main 또는 */master입니다.\u003c/li\u003e\n\u003cli\u003eJenkinsfile이 서브디렉토리에 있거나 다르게 명명된 경우 경로를 지정하세요 (기본값은 Jenkinsfile).\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_11.png\" alt=\"이미지\"\u003e\u003c/p\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_12.png\" alt=\"이미지\"\u003e\u003c/p\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003eJenkins 재시작하기:\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003e구성 변경이나 업데이트를 효과적으로 적용하기 위해 Jenkins를 재시작하세요.\u003c/li\u003e\n\u003cli\u003e이를 위해 Jenkins '대시보드'로 이동하고 사이드바에서 'Jenkins 관리'를 클릭하세요.\u003c/li\u003e\n\u003cli\u003e거기서 \"디스크에서 구성 다시로드\" 또는 \"안전하게 재시작\"을 선택하세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_13.png\" alt=\"Jenkins 재시작\"\u003e\u003c/p\u003e\n\u003ch1\u003eSonarqube 서버 설정하기\u003c/h1\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003eDocker 컨테이너로 SonarQube를 설치하는 것은 설정 프로세스를 간단히 하고 관리 및 확장을 쉽게 만드는 인기 있는 옵션입니다.\u003c/p\u003e\n\u003cp\u003e설치 전 요구 사항: 서버에 Docker가 설치되어 있는지 확인해주세요. 만약 설치되어 있지 않다면 공식 Docker 웹사이트에서 Docker를 다운로드하고 설치할 수 있습니다.\u003c/p\u003e\n\u003cp\u003eDocker 설치:\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003e'vim' 또는 사용하고자 하는 다른 편집기를 사용하여 스크립트 파일을 만들어주세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-js\"\u003einstall_docker.\u003cspan class=\"hljs-property\"\u003esh\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cul\u003e\n\u003cli\u003e삽입 모드에 들어가기 위해 i를 누르세요. 그리고 스크립트를 작성하세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003e\u003cspan class=\"hljs-meta\"\u003e#!/bin/bash\u003c/span\u003e\n\n\u003cspan class=\"hljs-comment\"\u003e# 패키지 관리자 저장소 업데이트\u003c/span\u003e\nsudo apt-get update\n\n\u003cspan class=\"hljs-comment\"\u003e# 필요한 종속성 설치\u003c/span\u003e\nsudo apt-get install -y ca-certificates curl\n\n\u003cspan class=\"hljs-comment\"\u003e# Docker GPG 키를 위한 디렉토리 생성\u003c/span\u003e\nsudo install -m 0755 -d /etc/apt/keyrings\n\n\u003cspan class=\"hljs-comment\"\u003e# Docker의 GPG 키 다운로드\u003c/span\u003e\nsudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc\n\n\u003cspan class=\"hljs-comment\"\u003e# 키에 적절한 권한 부여\u003c/span\u003e\nsudo \u003cspan class=\"hljs-built_in\"\u003echmod\u003c/span\u003e a+r /etc/apt/keyrings/docker.asc\n\n\u003cspan class=\"hljs-comment\"\u003e# Docker 저장소를 Apt 소스에 추가\u003c/span\u003e\n\u003cspan class=\"hljs-built_in\"\u003eecho\u003c/span\u003e \u003cspan class=\"hljs-string\"\u003e\"deb [arch=\u003cspan class=\"hljs-subst\"\u003e$(dpkg --print-architecture)\u003c/span\u003e signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \\\n\u003cspan class=\"hljs-subst\"\u003e$(. /etc/os-release \u0026#x26;\u0026#x26; echo \u003cspan class=\"hljs-string\"\u003e\"\u003cspan class=\"hljs-variable\"\u003e$VERSION_CODENAME\u003c/span\u003e\"\u003c/span\u003e)\u003c/span\u003e stable\"\u003c/span\u003e | \\\nsudo \u003cspan class=\"hljs-built_in\"\u003etee\u003c/span\u003e /etc/apt/sources.list.d/docker.list \u003e /dev/null\n\n\u003cspan class=\"hljs-comment\"\u003e# 패키지 관리자 저장소 업데이트\u003c/span\u003e\nsudo apt-get update\n\nsudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \n\u003c/code\u003e\u003c/pre\u003e\n\u003cul\u003e\n\u003cli\u003e정상 모드로 변경하시려면 Esc를 눌러서 normal 모드로 전환한 후 :wq를 입력한 후 Enter 키를 눌러주세요.\u003c/li\u003e\n\u003cli\u003e파일을 실행 가능하게 만드는 명령어를 사용하세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-js\"\u003echmod +x install_docker.\u003cspan class=\"hljs-property\"\u003esh\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e이제 스크립트가 실행 가능하니 Docker를 설치하려면 다음과 같이 실행하면 됩니다:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-js\"\u003e./install_docker.\u003cspan class=\"hljs-property\"\u003esh\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eSonarqube 설치하라:\u003c/p\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cul\u003e\n\u003cli\u003e도커 허브에서 공식 SonarQube 도커 이미지를 가져옵시다:\u003c/li\u003e\n\u003c/ul\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-js\"\u003edocker pull sonarqube\n\u003c/code\u003e\u003c/pre\u003e\n\u003cul\u003e\n\u003cli\u003e다음 명령어를 사용하여 도커 컨테이너에서 SonarQube를 실행해보세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-js\"\u003edocker run -d --name sonarqube -p \u003cspan class=\"hljs-number\"\u003e9000\u003c/span\u003e:\u003cspan class=\"hljs-number\"\u003e9000\u003c/span\u003e sonarqube\n\u003c/code\u003e\u003c/pre\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003eSonarQube는 기본적으로 9000번 포트에서 작동합니다. SonarQube 대시보드에 원활하게 접속하기 위해 방화벽을 구성하여이 포트의 들어오는 트래픽을 허용하는 것이 중요합니다.\u003c/p\u003e\n\u003cp\u003e브라우저에서 http://\u003ccode\u003eyour_instance_ip\u003c/code\u003e:9000을 입력하여 SonarQube에 액세스하십시오. \u003ccode\u003eyour_instance_ip\u003c/code\u003e를 서버의 IP 주소로 대체하십시오.\u003c/p\u003e\n\u003cp\u003eSonarQube의 기본 로그인 자격 증명은 다음과 같습니다:\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003e사용자 이름: admin\u003c/li\u003e\n\u003cli\u003e비밀번호: admin\u003c/li\u003e\n\u003c/ul\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003e하지만 보안상의 이유로 초기 설정 후에는 이러한 기본 자격 증명을 변경하는 것이 좋습니다.\u003c/p\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_14.png\" alt=\"image\"\u003e\u003c/p\u003e\n\u003cp\u003eJenkins와 통합하기:\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003eJenkins 플러그인을 위한 SonarQube Scanner를 설치합니다.\u003c/li\u003e\n\u003cli\u003eSonarQube 대시보드에 로그인합니다.\u003c/li\u003e\n\u003cli\u003e\"내 계정\"으로 이동하여 \"보안\"을 클릭하고 \"토큰 생성\"을 클릭합니다.\u003c/li\u003e\n\u003cli\u003e토큰에 이름을 지정하고 \"생성\"을 클릭합니다.\u003c/li\u003e\n\u003cli\u003e생성된 토큰을 복사합니다.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_15.png\" alt=\"이미지\"\u003e\u003c/p\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_16.png\" alt=\"이미지\"\u003e\u003c/p\u003e\n\u003cp\u003eJenkins에 SonarQube 토큰을 자격 인증으로 추가하는 방법:\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003eJenkins에서 “Jenkins 관리” \u003e “자격 증명” \u003e “시스템” \u003e “전역 자격 증명”(또는 프로젝트 자격 증명으로 이동).\u003c/li\u003e\n\u003cli\u003e“자격 증명 추가”를 클릭합니다.\u003c/li\u003e\n\u003cli\u003e자격 증명의 종류로 “비밀 텍스트”를 선택합니다.\u003c/li\u003e\n\u003cli\u003eSonarQube 인증 토큰을 “비밀” 필드에 붙여 넣습니다.\u003c/li\u003e\n\u003cli\u003e자격 증명의 ID와 설명을 선택적으로 제공합니다.\u003c/li\u003e\n\u003cli\u003e자격 증명을 저장하려면 “생성”을 클릭합니다.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003e이미지태그를 Markdown 형식으로 바꿔줍시다.\u003c/p\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_17.png\" alt=\"이미지 이름\"\u003e\u003c/p\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_18.png\" alt=\"이미지 이름\"\u003e\u003c/p\u003e\n\u003cp\u003eJenkins SonarQube Scanner 설정:\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003eJenkins 작업 구성에서 SonarQube 분석 섹션 또는 해당 섹션 이름을 찾아보세요.\u003c/li\u003e\n\u003cli\u003eSonarQube 서버 URL을 제공합니다(e.g.,http://\u003ccode\u003eyour_instance_ip\u003c/code\u003e:9000, \u003ccode\u003eyour_instance_ip\u003c/code\u003e을 서버의 IP 주소로 대체하세요).\u003c/li\u003e\n\u003cli\u003e이전에 추가한 SonarQube 토큰을 인증 토큰으로 사용하세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003ch1\u003e자격증\u003c/h1\u003e\n\u003cp\u003eCI/CD 파이프라인에 필요한 모든 자격증이 올바르게 구성되어 있는지 확인하세요.\u003c/p\u003e\n\u003cp\u003eSonarQube 인증, Docker Hub 접근 및 Git 저장소 인증을 위한 자격증이 포함됩니다.\u003c/p\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_19.png\" alt=\"이미지\"\u003e\u003c/p\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003ch1\u003eJenkinsfile\u003c/h1\u003e\n\u003cp\u003eJenkinsfile은 Jenkins 파이프라인의 구성을 정의하는 텍스트 파일입니다. 이는 Java 플랫폼을 위한 스크립팅 언어 인 Groovy로 작성됩니다.\u003c/p\u003e\n\u003cp\u003eJenkinsfile은 파이프라인 작업을 실행할 때 Jenkins가 실행해야하는 단계, 스테이지 및 작업을 지정합니다.\u003c/p\u003e\n\u003cp\u003eJenkins 파일의 일부는 자격 증명 및 세부 정보로 교체해야 할 부분이 있으니 주의해야 합니다.\u003c/p\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003ePipeline Stages:\u003c/p\u003e\n\u003cp\u003eStage 1: Git에서 소스 코드를 확인합니다.\u003c/p\u003e\n\u003cp\u003eStage 2: Maven을 사용하여 Java 애플리케이션을 빌드합니다.\u003c/p\u003e\n\u003cp\u003eStage 3: JUnit과 Mockito를 사용하여 단위 테스트를 실행합니다.\u003c/p\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003ch2\u003eStage 4: 코드 품질을 확인하기 위해 SonarQube 분석 실행\u003c/h2\u003e\n\u003ch2\u003eStage 5: 어플리케이션을 JAR 파일로 패키징\u003c/h2\u003e\n\u003ch2\u003eStage 6: Helm을 사용하여 어플리케이션을 테스트 환경에 배포\u003c/h2\u003e\n\u003ch2\u003eStage 7: 배포된 어플리케이션에서 사용자 수락 테스트 실행\u003c/h2\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003e\u003cstrong\u003eStage 8: Helm을 사용하여 애플리케이션을 프로덕션 환경으로 프로모션하기\u003c/strong\u003e\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-js\"\u003e파이프라인 {\n  에이전트 {\n    도커 {\n      이미지 \u003cspan class=\"hljs-string\"\u003e'abhishekf5/maven-abhishek-docker-agent:v1'\u003c/span\u003e\n      args \u003cspan class=\"hljs-string\"\u003e'--user root -v /var/run/docker.sock:/var/run/docker.sock'\u003c/span\u003e \u003cspan class=\"hljs-comment\"\u003e// 호스트의 도커 데몬에 액세스하기 위해 도커 소켓을 마운트\u003c/span\u003e\n    }\n  }\n  stages {\n    \u003cspan class=\"hljs-title function_\"\u003estage\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003e\u003cspan class=\"hljs-string\"\u003e'Checkout'\u003c/span\u003e\u003c/span\u003e) {\n      steps {\n        sh \u003cspan class=\"hljs-string\"\u003e'echo passed'\u003c/span\u003e\n        \u003cspan class=\"hljs-comment\"\u003e//git branch: 'main', url: 'https://github.com/wangoimwangi/jenkins-CICD.git'\u003c/span\u003e\n      }\n    }\n    \u003cspan class=\"hljs-title function_\"\u003estage\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003e\u003cspan class=\"hljs-string\"\u003e'Build and Test'\u003c/span\u003e\u003c/span\u003e) {\n      steps {\n        sh \u003cspan class=\"hljs-string\"\u003e'ls -ltr'\u003c/span\u003e\n        \u003cspan class=\"hljs-comment\"\u003e// 프로젝트 빌드하고 JAR 파일 생성\u003c/span\u003e\n        sh \u003cspan class=\"hljs-string\"\u003e'cd spring-boot-app \u0026#x26;\u0026#x26; mvn clean package'\u003c/span\u003e\n      }\n    }\n    \u003cspan class=\"hljs-title function_\"\u003estage\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003e\u003cspan class=\"hljs-string\"\u003e'정적 코드 분석'\u003c/span\u003e\u003c/span\u003e) {\n      environment {\n        \u003cspan class=\"hljs-variable constant_\"\u003eSONAR_URL\u003c/span\u003e = \u003cspan class=\"hljs-string\"\u003e\"http://54.252.140.131:9000\"\u003c/span\u003e\n      }\n      steps {\n        \u003cspan class=\"hljs-title function_\"\u003ewithCredentials\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003e[string(credentialsId: \u003cspan class=\"hljs-string\"\u003e'sonarqube'\u003c/span\u003e, variable: \u003cspan class=\"hljs-string\"\u003e'SONAR_AUTH_TOKEN'\u003c/span\u003e)]\u003c/span\u003e) {\n          sh \u003cspan class=\"hljs-string\"\u003e'cd spring-boot-app \u0026#x26;\u0026#x26; mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'\u003c/span\u003e\n        }\n      }\n    }\n    \u003cspan class=\"hljs-title function_\"\u003estage\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003e\u003cspan class=\"hljs-string\"\u003e'Docker 이미지 빌드 및 푸시'\u003c/span\u003e\u003c/span\u003e) {\n      environment {\n        \u003cspan class=\"hljs-variable constant_\"\u003eDOCKER_IMAGE\u003c/span\u003e = \u003cspan class=\"hljs-string\"\u003e\"ultimate-cicd:${BUILD_NUMBER}\"\u003c/span\u003e\n        \u003cspan class=\"hljs-comment\"\u003e// DOCKERFILE_LOCATION = \"spring-boot-app/Dockerfile\"\u003c/span\u003e\n        \u003cspan class=\"hljs-variable constant_\"\u003eREGISTRY_CREDENTIALS\u003c/span\u003e = \u003cspan class=\"hljs-title function_\"\u003ecredentials\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e'docker-cred'\u003c/span\u003e)\n      }\n      steps {\n        script {\n            sh \u003cspan class=\"hljs-string\"\u003e'cd spring-boot-app \u0026#x26;\u0026#x26; docker build -t ${DOCKER_IMAGE} .'\u003c/span\u003e\n            def dockerImage = docker.\u003cspan class=\"hljs-title function_\"\u003eimage\u003c/span\u003e(\u003cspan class=\"hljs-string\"\u003e\"${DOCKER_IMAGE}\"\u003c/span\u003e)\n            docker.\u003cspan class=\"hljs-title function_\"\u003ewithRegistry\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003e\u003cspan class=\"hljs-string\"\u003e'https://index.docker.io/v1/'\u003c/span\u003e, \u003cspan class=\"hljs-string\"\u003e\"docker-cred\"\u003c/span\u003e\u003c/span\u003e) {\n                dockerImage.\u003cspan class=\"hljs-title function_\"\u003epush\u003c/span\u003e()\n            }\n        }\n      }\n    }\n    \u003cspan class=\"hljs-title function_\"\u003estage\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003e\u003cspan class=\"hljs-string\"\u003e'배포 파일 업데이트'\u003c/span\u003e\u003c/span\u003e) {\n        environment {\n            \u003cspan class=\"hljs-variable constant_\"\u003eGIT_REPO_NAME\u003c/span\u003e = \u003cspan class=\"hljs-string\"\u003e\"jenkins-CICD\"\u003c/span\u003e\n            \u003cspan class=\"hljs-variable constant_\"\u003eGIT_USER_NAME\u003c/span\u003e = \u003cspan class=\"hljs-string\"\u003e\"wangoimwangi\"\u003c/span\u003e\n        }\n        steps {\n            \u003cspan class=\"hljs-title function_\"\u003ewithCredentials\u003c/span\u003e(\u003cspan class=\"hljs-params\"\u003e[string(credentialsId: \u003cspan class=\"hljs-string\"\u003e'github'\u003c/span\u003e, variable: \u003cspan class=\"hljs-string\"\u003e'GITHUB_TOKEN'\u003c/span\u003e)]\u003c/span\u003e) {\n                sh \u003cspan class=\"hljs-string\"\u003e''\u003c/span\u003e\u003cspan class=\"hljs-string\"\u003e'\n                    git config user.email \"mariakoi800@gmail.com\"\n                    git config user.name \"Maria\"\n                    BUILD_NUMBER=${BUILD_NUMBER}\n                    sed -i \"s/replaceImageTag/${BUILD_NUMBER}/g\" spring-boot-app-manifests/deployment.yml\n                    git add spring-boot-app-manifests/deployment.yml\n                    git commit -m \"Update deployment image to version ${BUILD_NUMBER}\"\n                    git push @github.com/${GIT_USER_NAME}/${GIT_REPO_NAME\"\u003ehttps://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main\n                '\u003c/span\u003e\u003cspan class=\"hljs-string\"\u003e''\u003c/span\u003e\n            }\n        }\n    }\n  }\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003cul\u003e\n\u003cli\u003e\"지금 빌드\"를 클릭하여 파이프라인 작업을 트리거합니다.\u003c/li\u003e\n\u003cli\u003eJenkins는 귀하의 저장소에서 Jenkinsfile을 가져와 정의된대로 실행합니다.\u003c/li\u003e\n\u003cli\u003eJenkins 대시보드에서 파이프라인 작업 진행 상황을 확인할 수 있습니다.\u003c/li\u003e\n\u003cli\u003e각 파이프라인 단계가 실행될 때마다 자세한 로그와 상태 업데이트를 보려면 작업을 클릭하십시오.\u003c/li\u003e\n\u003cli\u003e파이프라인 실행 중 문제가 발생하면 Jenkinsfile 및 작업 구성을 검토하여 오류를 확인하십시오.\u003c/li\u003e\n\u003cli\u003e문제가 발생했을 경우 콘솔 출력과 로그를 확인하여 실패에 대한 자세한 내용을 확인하십시오.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_20.png\" alt=\"End-to-End CI/CD 파이프라인 구현\"\u003e\u003c/p\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003eSonarQube는 파이프라인 실행 보고서를 포함하게 됩니다.\u003c/p\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_21.png\" alt=\"Pipeline Report\"\u003e\u003c/p\u003e\n\u003ch1\u003eArgoCD 설정\u003c/h1\u003e\n\u003cp\u003eArgoCD는 CI/CD 파이프라인의 지속적 배포 세그먼트를 관리하며, Kubernetes로의 배포를 자동화합니다.\u003c/p\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003e로컬 배포는 Minikube를 사용하거나 Amazon EKS를 활용한 클라우드 배포를 선택할 수 있어요.\u003c/p\u003e\n\u003cp\u003e준비물:\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003eMinikube에서 필요로 하는 가상화를 위해 Windows 컴퓨터에 VirtualBox 또는 Hyper-V가 설치되어 있는지 확인해주세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003eMinikube 설치하는 방법은 다음과 같아요:\u003c/p\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cul\u003e\n\u003cli\u003eMinikube을 다운로드하고 설치하세요. 각 OS에 맞는 설명은 Minikube 공식 문서를 참고해주세요.\u003c/li\u003e\n\u003cli\u003e로컬 Kubernetes 클러스터를 시작하세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003eminikube start\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eKubectl 설치 방법:\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003e공식 Kubernetes 릴리스 페이지에서 최신 버전의 kubectl을 다운로드하세요.\u003c/li\u003e\n\u003cli\u003ekubectl을 PATH에 추가하여 명령 프롬프트에서 어디서든 실행할 수 있도록 해주세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003ch1\u003eArgoCD 오퍼레이터 설치하기\u003c/h1\u003e\n\u003cp\u003e쿠버네티스에 Argo CD를 설치하려면 Argo CD 오퍼레이터를 사용할 수 있습니다. 이 오퍼레이터는 Argo CD 인스턴스의 배포와 관리를 자동화합니다.\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003e\u003ca href=\"https://operatorhub.io\" rel=\"nofollow\" target=\"_blank\"\u003e공식 Operator Hub 페이지\u003c/a\u003e로 이동합니다.\u003c/li\u003e\n\u003cli\u003eOperator Hub 웹사이트의 검색 바를 사용하여 \"Argo CD\"를 검색하고 \"설치\"를 클릭합니다.\u003c/li\u003e\n\u003cli\u003e다음 명령어를 실행하세요:\u003c/li\u003e\n\u003c/ul\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-shell\"\u003e\u003cspan class=\"hljs-meta prompt_\"\u003e# \u003c/span\u003e\u003cspan class=\"bash\"\u003eOperator Lifecycle Manager (OLM)을 설치합니다. OLM은 클러스터에서 실행 중인 Operator를 관리하는 데 도움이 되는 도구입니다.\u003c/span\u003e\n\u003cspan class=\"hljs-meta prompt_\"\u003e\n$ \u003c/span\u003e\u003cspan class=\"bash\"\u003ecurl -sL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.27.0/install.sh | bash -s v0.27.0\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-shell\"\u003e\u003cspan class=\"hljs-meta prompt_\"\u003e# \u003c/span\u003e\u003cspan class=\"bash\"\u003eAgroCD Operator 설치하기\u003c/span\u003e\nkubectl create -f https://operatorhub.io/install/argocd-operator.yaml\n\u003c/code\u003e\u003c/pre\u003e\n\u003cul\u003e\n\u003cli\u003e이 Operator는 “operators” 네임스페이스에 설치되며, 클러스터의 모든 네임스페이스에서 사용할 수 있습니다.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-shell\"\u003e\u003cspan class=\"hljs-meta prompt_\"\u003e# \u003c/span\u003e\u003cspan class=\"bash\"\u003eOperator 구동 상태 확인하기\u003c/span\u003e\n\u003cspan class=\"hljs-meta prompt_\"\u003e$ \u003c/span\u003e\u003cspan class=\"bash\"\u003ekubectl get csv -n operators\u003c/span\u003e\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_22.png\" alt=\"이미지\"\u003e\u003c/p\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_23.png\" alt=\"이미지\"\u003e\u003c/p\u003e\n\u003ch1\u003eArgoCD 컨트롤러 설정하기\u003c/h1\u003e\n\u003cul\u003e\n\u003cli\u003eOperatorHub.io로 이동합니다.\u003c/li\u003e\n\u003cli\u003e\"Argo CD\" Operator에서 \"Operator Documentation\"으로 스크롤합니다.\u003c/li\u003e\n\u003cli\u003e\"Usage\"를 클릭한 후 \"Basics\"를 클릭합니다.\u003c/li\u003e\n\u003cli\u003e제공된 YAML 구성을 복사합니다. 이 YAML은 Kubernetes 클러스터에 Argo CD를 배포하는 데 사용됩니다.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_24.png\" alt=\"이미지\"\u003e\u003c/p\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_25.png\" alt=\"image\"\u003e\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003eArgo CD 인스턴스를 정의하는 다음 내용을 포함하여 vim argocd-basic.yml이라는 새 파일을 생성하세요:\u003c/li\u003e\n\u003c/ul\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-js\"\u003e\u003cspan class=\"hljs-attr\"\u003eapiVersion\u003c/span\u003e: argoproj.\u003cspan class=\"hljs-property\"\u003eio\u003c/span\u003e/v1alpha1\n\u003cspan class=\"hljs-attr\"\u003ekind\u003c/span\u003e: \u003cspan class=\"hljs-title class_\"\u003eArgoCD\u003c/span\u003e\n\u003cspan class=\"hljs-attr\"\u003emetadata\u003c/span\u003e:\n  \u003cspan class=\"hljs-attr\"\u003ename\u003c/span\u003e: example-argocd\n  \u003cspan class=\"hljs-attr\"\u003elabels\u003c/span\u003e:\n    \u003cspan class=\"hljs-attr\"\u003eexample\u003c/span\u003e: basic\n\u003cspan class=\"hljs-attr\"\u003espec\u003c/span\u003e: {}\n\u003c/code\u003e\u003c/pre\u003e\n\u003cul\u003e\n\u003cli\u003e구성을 적용하세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003ekubectl apply -f argocd-basic.yml\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_26.png\" alt=\"ArgoCD UI\"\u003e\u003c/p\u003e\n\u003ch1\u003eArgoCD UI 설정\u003c/h1\u003e\n\u003cul\u003e\n\u003cli\u003e브라우저를 통해 Argo CD 서버 UI에 접속하려면 서비스 유형을 'ClusterIP'에서 'NodePort'로 변경해야 합니다.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-js\"\u003ekubectl get svc\n\u003c/code\u003e\u003c/pre\u003e\n\u003cul\u003e\n\u003cli\u003eMinikube를 통해 브라우저를 통해 Argo CD 서버에 직접 액세스할 수 있는 URL을 생성할 수 있습니다.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-js\"\u003eminikube service argocd-server --url\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_27.png\" alt=\"2024-07-01-End-to-EndCICDPipelineImplementation_27.png\"\u003e\u003c/p\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cul\u003e\n\u003cli\u003e이전 명령어에서 표시된 URL을 복사해서 브라우저에 붙여넣어 Argo CD UI에 액세스하세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_28.png\" alt=\"Argo CD UI\"\u003e\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003e기본 사용자 이름은 'admin'입니다. 관리자 암호를 얻으려면 Kubernetes 시크릿에서 추출해야 합니다:\u003c/li\u003e\n\u003c/ul\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-js\"\u003ekubectl get secret\n\u003c/code\u003e\u003c/pre\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cul\u003e\n\u003cli\u003e\"example-argocd-cluster\" 시크릿을 편집하고 어드민 비밀번호를 복사해주세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003ekubectl edit secret example-argocd-cluster\n\u003c/code\u003e\u003c/pre\u003e\n\u003cul\u003e\n\u003cli\u003eK8s 시크릿은 base64로 암호화되어 있으니 디코딩하려면 이 커맨드를 사용하세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cpre\u003e\u003ccode class=\"hljs language-bash\"\u003e\u003cspan class=\"hljs-built_in\"\u003eecho\u003c/span\u003e \u0026#x3C;인코딩된 비밀번호 입력\u003e= | \u003cspan class=\"hljs-built_in\"\u003ebase64\u003c/span\u003e -d\n\u003c/code\u003e\u003c/pre\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cul\u003e\n\u003cli\u003e\"admin\" 사용자 이름과 이전 단계에서 가져온 비밀번호를 사용하여 Argo CD UI에 로그인하세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_29.png\" alt=\"image\"\u003e\u003c/p\u003e\n\u003ch1\u003eArgo CD로 배포하기\u003c/h1\u003e\n\u003cul\u003e\n\u003cli\u003eArgo CD UI에서 \"Create Application\"을 클릭하세요.\u003c/li\u003e\n\u003cli\u003e애플리케이션에 필요한 정보를 입력하세요.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003e애플리케이션 이름: 애플리케이션에 대한 설명적인 이름을 입력해주세요.\u003c/p\u003e\n\u003cp\u003e프로젝트 이름: 애플리케이션이 속한 프로젝트를 지정해주세요.\u003c/p\u003e\n\u003cp\u003e동기화: 자동 동기화를 위해 \"자동\"을 선택해주세요.\u003c/p\u003e\n\u003cp\u003e저장소 URL: 애플리케이션 코드를 포함한 Git 저장소의 URL을 입력해주세요.\u003c/p\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003ePath: 레포지토리 내 배포 파일 경로를 지정합니다.\u003c/p\u003e\n\u003cp\u003eDestination: 쿠버네티스 클러스터의 URL을 입력합니다 (예: \u003ca href=\"https://kubernetes.default.svc\" rel=\"nofollow\" target=\"_blank\"\u003ehttps://kubernetes.default.svc\u003c/a\u003e).\u003c/p\u003e\n\u003cp\u003eNamespace: 애플리케이션이 배포될 쿠버네티스 네임스페이스를 지정합니다.\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003e필요한 모든 정보를 제공한 후, \"생성\"을 클릭합니다.\u003c/li\u003e\n\u003cli\u003e제공된 구성에 따라 Argo CD가 자동으로 쿠버네티스 클러스터에 애플리케이션을 생성합니다.\u003c/li\u003e\n\u003c/ul\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_30.png\" alt=\"이미지1\"\u003e\u003c/p\u003e\n\u003cp\u003e\u003cimg src=\"/assets/img/2024-07-01-End-to-EndCICDPipelineImplementation_31.png\" alt=\"이미지2\"\u003e\u003c/p\u003e\n\u003ch1\u003e결론\u003c/h1\u003e\n\u003cp\u003e이 프로젝트는 GitHub, Maven, SonarQube, Docker, Jenkins, Argo CD, Helm, 그리고 Kubernetes를 CI/CD 파이프라인에 통합하여 소프트웨어 개발의 효율성과 신뢰성을 향상시킬 수 있다는 것을 효과적으로 시연하였습니다.\u003c/p\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003cp\u003e저희는 프로세스를 개선하여 배송 속도를 높이고 소프트웨어 품질을 향상시켰습니다.\u003c/p\u003e\n\u003cp\u003e앞으로도 파이프라인을 계속 개선하고 자동화를 강화하기 위해 새로운 도구를 탐색할 것입니다.\u003c/p\u003e\n\u003cp\u003e감사의 말씀\u003c/p\u003e\n\u003cp\u003e이 프로젝트는 우수한 데브옵스 컨텐츠로 유명한 Abhishek Veeramalla의 영감을 많이 받았습니다. 그의 컨텐츠가 나의 발전을 위한 견고한 기반이 되었습니다. 그의 컨텐츠는 여기에서 확인해보세요.\u003c/p\u003e\n\u003cdiv class=\"content-ad\"\u003e\u003c/div\u003e\n\u003ch1\u003e함께 소통해요\u003c/h1\u003e\n\u003cp\u003e더 많은 정보와 향후 프로젝트에 대해 더 알고 싶다면, LinkedIn, GitHub, 그리고 Medium에서 저와 함께 소통해주세요. 🌏✈️🗺️\u003c/p\u003e\n\u003c/body\u003e\n\u003c/html\u003e\n"},"__N_SSG":true},"page":"/post/[slug]","query":{"slug":"2024-07-01-End-to-EndCICDPipelineImplementation"},"buildId":"b8U7s_RvqNSxLMq8QFXiX","isFallback":false,"gsp":true,"scriptLoader":[{"async":true,"src":"https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4877378276818686","strategy":"lazyOnload","crossOrigin":"anonymous"}]}</script></body></html>
